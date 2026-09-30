@@ -106,6 +106,8 @@ def run_hook_case(tmp, case):
         report(False, case["why"], "expected silence, got: " + out)
     elif expected and expected not in out:
         report(False, case["why"], f"no '{expected}' in: {out}")
+    elif case.get("expect_absent") and case["expect_absent"] in out:
+        report(False, case["why"], f"unexpected '{case['expect_absent']}' in: {out}")
     else:
         report(True, case["why"])
 

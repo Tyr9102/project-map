@@ -6,8 +6,8 @@ the session to load the project-map skill and bring the map up to date.
 UserPromptSubmit: in a project with a map whose watcher (watcher.py) for THIS session
 is not alive - first message, 2 h task limit, crash - tell the session to start it,
 so "Send" wakes it without "check the map" and a compacted-away instruction.
-SessionStart: start the map server if needed and report commits the map has not
-been reminded about (made outside Claude).
+SessionStart: point the session to the map, start the map server if needed and
+report commits the map has not been reminded about (made outside Claude).
 
 The hook decides WHEN, the skill knows HOW. The open session does the update
 because it knows why the code changed - a background agent would not.
@@ -163,7 +163,11 @@ def on_session_start(payload):
         return
     # Imported here: every Bash call runs this hook, and only session start needs the server.
     from server import start_in_background
-    context = []
+    # Without this the skill loads only when the user says "map" or after a commit,
+    # so decisions from a plain conversation would never reach the map.
+    context = [f"This project has the project map \"{found['title']}\". When you and the user "
+               "settle something about the project, or a brainstorm ends, load the project-map "
+               "skill (section \"The map grows live in the conversation\")."]
     server_error = start_in_background(wait=False)
     if server_error:
         context.append(f"The map page cannot start: {server_error}. Tell the user in one sentence.")
@@ -178,8 +182,7 @@ def on_session_start(payload):
             "In your first reply tell the user in one sentence and ask whether to update "
             "the map. After a yes, load the project-map skill (section \"Does the map "
             "keep up\").")
-    if context:
-        emit("SessionStart", "\n\n".join(context))
+    emit("SessionStart", "\n\n".join(context))
     head = git(found["project"], "rev-parse", "HEAD")
     if head:
         remember_head(found["slug"], head)

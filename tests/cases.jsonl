@@ -6,8 +6,8 @@
 {"event":"UserPromptSubmit","setup":"map-project","command":"","expect_output":"project-map-watch sample","why":"a message in a project with a map and no watcher of this session asks to start it"}
 {"event":"SessionStart","setup":"map-nomap","command":"","expect_output":"","why":"session start in a project without a map - silence"}
 {"event":"SessionStart","setup":"map-stale","command":"","expect_output":"- new feature","why":"session start reports a commit the map has not seen yet"}
-{"event":"SessionStart","setup":"map-stale","command":"","expect_output":"","why":"second start without new commits - silence"}
-{"event":"SessionStart","setup":"map-project","command":"","expect_output":"","why":"session start without new commits - silence, the first message starts the watcher"}
+{"event":"SessionStart","setup":"map-stale","command":"","expect_output":"grows live","expect_absent":"- new feature","why":"second start without new commits - no commit report again"}
+{"event":"SessionStart","setup":"map-project","command":"","expect_output":"grows live","expect_absent":"may not include commits","why":"session start in a project with a map points to the map, no commit report"}
 {"event":"UserPromptSubmit","setup":"map-listening","command":"","expect_output":"","why":"a message while this session's watcher lives - silence"}
 {"event":"UserPromptSubmit","setup":"map-listening-other","command":"","expect_output":"project-map-watch sample","why":"only another session's watcher lives - asks to start its own"}
 {"event":"UserPromptSubmit","setup":"map-nomap","command":"","expect_output":"","why":"a message in a project without a map - silence"}

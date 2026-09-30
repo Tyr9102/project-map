@@ -80,7 +80,12 @@ Several sessions may listen to one map - on Send the page asks the user which on
 
 ## The map grows live in the conversation
 
-When we talk about a project with a map (after "Starting work"): after every **settled** decision or new idea add or fix a tile at once and say so in one sentence ("On the map: new tile X in Ideas"). Do not add loose digressions until the user confirms them. Commit at the end of a conversation thread, not after every tile.
+When we talk about a project with a map, the map gets what was **settled**, not everything that was said - a brainstorm must not turn it into a dump.
+- **Settled** (a decision, something dropped, a question answered, a change of plan): add or fix the tile at once and say so in one sentence ("On the map: new tile X in Ideas").
+- **Ideas, loose variants, "what if…"**: nothing during the conversation. When the thread ends, ask once: "From this conversation these fit the map: A, B. Add them?" - at most 3 candidates, write only the ones the user picks.
+- An idea the user asks to add ("put it on the map"): at once.
+
+Commit at the end of a conversation thread, not after every tile.
 
 ## Mode 3: add after a conversation
 

@@ -15,7 +15,7 @@ Made for people who think about a project without reading its code: about 20 til
 - **"Make a project map"** - Claude reads the project's docs and history, checks features against the code and builds the map. Tiles it could not confirm are marked as open questions.
 - **Notes on tiles** - comment, question or suggestion. Collect a few drafts, then Send them as one batch.
 - **Send wakes the session** - within 1-2 seconds, no typing in the terminal. Replies appear next to the tiles.
-- **The map keeps up** - after a commit Claude updates the tiles; at session start it reports commits the map has not seen.
+- **The map keeps up** - after a commit Claude updates the tiles; at session start it reports commits the map has not seen. Decisions from the conversation go on the map at once; ideas from a brainstorm only the ones you pick at its end, so the map does not fill up with every "what if".
 - **Everything stays local** - the page runs on `127.0.0.1`, maps are plain JSON files on your disk. Nothing is sent anywhere except to Claude, as part of your normal session.
 
 The page speaks English or Polish, following your browser language.
