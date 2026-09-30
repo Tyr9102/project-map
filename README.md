@@ -1,6 +1,6 @@
 # Project Map
 
-**English** | [Polski](README.pl.md)
+[![English](https://img.shields.io/badge/English-555555?style=for-the-badge)](README.md) [![Polski](https://img.shields.io/badge/Polski-dc143c?style=for-the-badge)](README.pl.md)
 
 [![tests](https://github.com/Tyr9102/project-map/actions/workflows/test.yml/badge.svg)](https://github.com/Tyr9102/project-map/actions/workflows/test.yml)
 
@@ -52,6 +52,8 @@ Or skip this step: when you make your first map, Claude asks whether to add the 
 Without it, auto mode may block the watcher (it runs code from the plugin, not from your project) and the map works without waking Claude - you type "check the map" instead.
 
 Then, in a project directory, tell Claude: **"make a project map"**. It gives you the address, by default `http://127.0.0.1:8765`.
+
+What changed in each version: [CHANGELOG.md](CHANGELOG.md).
 
 ## Settings
 

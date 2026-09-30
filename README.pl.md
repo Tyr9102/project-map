@@ -1,6 +1,6 @@
 # Project Map
 
-[English](README.md) | **Polski**
+[![English](https://img.shields.io/badge/English-1f6feb?style=for-the-badge)](README.md) [![Polski](https://img.shields.io/badge/Polski-555555?style=for-the-badge)](README.pl.md)
 
 [![tests](https://github.com/Tyr9102/project-map/actions/workflows/test.yml/badge.svg)](https://github.com/Tyr9102/project-map/actions/workflows/test.yml)
 
@@ -52,6 +52,8 @@ Możesz też pominąć ten krok: przy pierwszej mapie Claude zapyta, czy dodać 
 Bez niej tryb auto może zablokować nasłuch (uruchamia kod z wtyczki, nie z Twojego projektu). Mapa działa wtedy bez budzenia Claude'a - zamiast tego piszesz „sprawdź mapę”.
 
 Potem w katalogu projektu powiedz Claude'owi: **„zrób mapę projektu”**. Poda Ci adres, domyślnie `http://127.0.0.1:8765`.
+
+Co się zmieniło w każdej wersji: [CHANGELOG.md](CHANGELOG.md) (po angielsku).
 
 ## Ustawienia
 
