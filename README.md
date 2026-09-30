@@ -4,7 +4,7 @@
 
 [![tests](https://github.com/Tyr9102/project-map/actions/workflows/test.yml/badge.svg)](https://github.com/Tyr9102/project-map/actions/workflows/test.yml)
 
-Keep an eye on your project at a glance. As a project grows, it gets hard to follow from a terminal conversation alone: what works, what is in progress, where the pitfalls are. Project Map shows the whole thing as a map of tiles in your browser, in plain language, without code. When you want something changed, you do not have to describe at length in the terminal which part you mean. You click the tile, write your note right on it, and Claude knows exactly what it is about.
+Keep an eye on your project at a glance. As a project grows, it gets hard to follow from a terminal conversation alone: what works, what is in progress, where the pitfalls are. Project Map shows the whole thing as a map of tiles in your browser, in plain language, without code. When you want something changed, you do not have to describe at length in the terminal which part you mean. You click the tile, write your note right on it, and Claude knows exactly what it is about. The map does not replace your work in the terminal - that is still where you talk to Claude and build the project. It helps you keep the context in one place and, while you work, pin down a specific point quickly.
 
 A Claude Code plugin that turns a conversation about your project into a map of tiles in the browser. You leave notes on the tiles, click **Send**, and the Claude Code session you have open wakes up by itself, replies next to the tiles and updates the map.
 
