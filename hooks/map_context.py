@@ -21,7 +21,6 @@ import os
 import re
 import subprocess
 import sys
-import tempfile
 import time
 import traceback
 from pathlib import Path
@@ -91,6 +90,11 @@ def remember_head(slug, head):
     (STATE_DIR / slug).write_text(head + "\n", encoding="utf-8")
 
 
+def last_reminded(slug):
+    state = STATE_DIR / slug
+    return state.read_text(encoding="utf-8").strip() if state.is_file() else ""
+
+
 def unseen_commits(found):
     """Commits in the project the map has not been reminded about yet, as "- subject"
     lines. Commits touching only the maps are map updates themselves."""
@@ -101,8 +105,7 @@ def unseen_commits(found):
     prefix = maps_in_repo(Path(git(project, "rev-parse", "--show-toplevel")).resolve())
     if prefix:
         paths.append(":(exclude)" + prefix)
-    state = STATE_DIR / found["slug"]
-    seen = state.read_text(encoding="utf-8").strip() if state.is_file() else ""
+    seen = last_reminded(found["slug"])
     if seen and git(project, "cat-file", "-e", seen + "^{commit}") is not None:
         rng = [seen + "..HEAD"]
     elif found["updated"]:
@@ -200,27 +203,26 @@ def only_map_files_changed(repo):
 
 def on_bash(payload):
     command = (payload.get("tool_input") or {}).get("command") or ""
-    session_id, cwd = payload.get("session_id"), payload.get("cwd")
-    if not COMMIT_RE.search(command) or not session_id or not cwd or not MAPS_DIR.is_dir():
+    cwd = payload.get("cwd")
+    if not COMMIT_RE.search(command) or not cwd or not MAPS_DIR.is_dir():
         return
     cwd = Path(cwd).resolve()
     toplevel = git(cwd, "rev-parse", "--show-toplevel")
     head = toplevel and git(toplevel, "rev-parse", "HEAD")
     if not head:
         return
-    # One reminder per commit: a second hook call for the same HEAD (commit failed,
-    # nothing new) must not ask for the same map update again.
-    marker = Path(tempfile.gettempdir()) / f"claude-project-map-ctx-{session_id}-{head}"
-    if marker.exists() or only_map_files_changed(Path(toplevel).resolve()):
+    if only_map_files_changed(Path(toplevel).resolve()):
         return
     found = find_map(cwd)
-    if not found:
+    # One reminder per commit: a second hook call for the same HEAD (commit failed,
+    # nothing new) must not ask for the same map update again. The map's own state
+    # file, not a file per commit - those piled up in the temp directory.
+    if not found or last_reminded(found["slug"]) == head:
         return
     emit("PostToolUse",
          f"The project has the map \"{found['title']}\" ({(MAPS_DIR / found['slug']).as_posix()}). "
          f"Load the project-map skill and follow its section \"Update after a commit\" "
          f"for commit {head[:7]}.")
-    marker.touch()
     remember_head(found["slug"], head)
 
 
