@@ -1,0 +1,8 @@
+#!/bin/sh
+# The watcher as a plugin command: a permission rule can name it once,
+# Bash(project-map-watch:*), and the rule survives plugin updates.
+root="$(dirname "$0")/.."
+if python3 -c '' 2>/dev/null; then
+  exec python3 "$root/watcher.py" "$@"
+fi
+exec python "$root/watcher.py" "$@"

@@ -1,0 +1,83 @@
+#!/usr/bin/env python3
+"""Waits for a "Send" signal meant for this session and exits with its content.
+
+Claude runs it as a background task: the exit is what wakes the session,
+so after handling the notes Claude must start it again.
+Several sessions may listen to one map; the page asks which one to wake.
+
+Usage: watcher.py <map-slug> "<session topic>" [<Claude session id>]
+"""
+import secrets
+import shutil
+import signal
+import sys
+import time
+from datetime import datetime, timezone
+
+from settings import MAPS_DIR
+
+POLL_SECONDS = 1
+
+
+def now_iso():
+    # Same shape as toISOString() and now_iso() in server.py - the page compares text.
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+
+
+def exit_on_signal(signum, _frame):
+    # Turns a kill from Claude Code into a normal exit, so `finally` removes the
+    # session directory and the page stops showing this session at once.
+    sys.exit(128 + signum)
+
+
+def claim_shared_signals(signals_dir, session_dir):
+    # Signals sent while nobody listened are shared; rename is atomic, so exactly one
+    # session takes each. A failed rename means another session was faster.
+    for f in signals_dir.glob("*.json"):
+        try:
+            f.rename(session_dir / f.name)
+        except OSError:
+            pass
+
+
+def main():
+    # Windows consoles default to a legacy code page that cannot print Polish letters.
+    sys.stdout.reconfigure(encoding="utf-8")
+    args = sys.argv[1:]
+    slug = args[0] if args else ""
+    topic = (args[1] if len(args) > 1 else "").replace("\n", " ")
+    # Claude Code session id, passed by the map_context hook so it can tell whether
+    # this session already listens.
+    claude_session = args[2] if len(args) > 2 else ""
+    if not slug or not topic or not (MAPS_DIR / slug / "map.json").is_file():
+        sys.exit(f"usage: watcher.py <map slug> \"<session topic>\" [<Claude session id>] "
+                 f"(map '{slug}' in {MAPS_DIR}, topic '{topic}')")
+
+    signals_dir = MAPS_DIR / slug / "signals"
+    # Id format must match SESSION_ID_RE in server.py.
+    session_dir = signals_dir / "sessions" / secrets.token_hex(8)
+    session_dir.mkdir(parents=True)
+    for sig in (signal.SIGTERM, getattr(signal, "SIGHUP", None)):
+        if sig is not None:
+            signal.signal(sig, exit_on_signal)
+    try:
+        (session_dir / "topic").write_text(topic, encoding="utf-8")
+        (session_dir / "start").write_text(now_iso() + "\n", encoding="utf-8")
+        (session_dir / "claude_session").write_text(claude_session, encoding="utf-8")
+        while True:
+            # The page counts the session as listening only while this file keeps getting fresh.
+            (session_dir / "heartbeat").touch()
+            claim_shared_signals(signals_dir, session_dir)
+            received = sorted(session_dir.glob("*.json"))
+            if received:
+                for f in received:
+                    print("SIGNAL: " + f.read_text(encoding="utf-8"), flush=True)
+                    f.unlink()
+                return
+            time.sleep(POLL_SECONDS)
+    finally:
+        shutil.rmtree(session_dir, ignore_errors=True)
+
+
+if __name__ == "__main__":
+    main()

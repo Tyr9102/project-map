@@ -1,0 +1,13 @@
+{"event":"PostToolUse","setup":"map-project","command":"git commit -q -m change","expect_output":"project-map skill","why":"a commit in a project with a map asks for a map update"}
+{"event":"PostToolUse","setup":"map-project","command":"git commit -q -m change","expect_output":"","why":"the same commit again - silence"}
+{"event":"PostToolUse","setup":"map-nomap","command":"git add a.py && git commit -m x","expect_output":"","why":"a commit in a project without a map - silence"}
+{"event":"PostToolUse","setup":"map-project","command":"git status","expect_output":"","why":"a command without a commit - silence"}
+{"event":"PostToolUse","setup":"map-mapsrepo","command":"git commit -q -m 'Map X: after a change'","expect_output":"","why":"a commit of only the map in the maps repo - no loop"}
+{"event":"UserPromptSubmit","setup":"map-project","command":"","expect_output":"project-map-watch sample","why":"a message in a project with a map and no watcher of this session asks to start it"}
+{"event":"SessionStart","setup":"map-nomap","command":"","expect_output":"","why":"session start in a project without a map - silence"}
+{"event":"SessionStart","setup":"map-stale","command":"","expect_output":"- new feature","why":"session start reports a commit the map has not seen yet"}
+{"event":"SessionStart","setup":"map-stale","command":"","expect_output":"","why":"second start without new commits - silence"}
+{"event":"SessionStart","setup":"map-project","command":"","expect_output":"","why":"session start without new commits - silence, the first message starts the watcher"}
+{"event":"UserPromptSubmit","setup":"map-listening","command":"","expect_output":"","why":"a message while this session's watcher lives - silence"}
+{"event":"UserPromptSubmit","setup":"map-listening-other","command":"","expect_output":"project-map-watch sample","why":"only another session's watcher lives - asks to start its own"}
+{"event":"UserPromptSubmit","setup":"map-nomap","command":"","expect_output":"","why":"a message in a project without a map - silence"}

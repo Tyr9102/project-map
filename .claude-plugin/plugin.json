@@ -1,0 +1,14 @@
+{
+  "name": "project-map",
+  "displayName": "Project Map",
+  "version": "0.2.0",
+  "description": "An interactive map of your project in the browser: leave notes on tiles, click Send, and the open Claude Code session wakes up, replies and updates the map.",
+  "author": {
+    "name": "Patryk Tyrański",
+    "url": "https://github.com/Tyr9102"
+  },
+  "homepage": "https://github.com/Tyr9102/project-map",
+  "repository": "https://github.com/Tyr9102/project-map",
+  "license": "MIT",
+  "keywords": ["project-map", "brainstorming", "overview", "notes", "no-code"]
+}

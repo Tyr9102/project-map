@@ -1,0 +1,610 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Project maps</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231A4FA0'/%3E%3Crect x='6' y='6' width='9' height='9' rx='2' fill='%23fff'/%3E%3Crect x='17' y='6' width='9' height='9' rx='2' fill='%23fff' opacity='.6'/%3E%3Crect x='6' y='17' width='9' height='9' rx='2' fill='%23fff' opacity='.6'/%3E%3Crect x='17' y='17' width='9' height='9' rx='2' fill='%23fff'/%3E%3C/svg%3E">
+<style>
+:root{
+  --ground:#EDEFEA; --surface:#FAFBF8; --raised:#FFFFFF; --ink:#1B221E; --muted:#58625C; --line:#D2D7D0;
+  --accent:#1A4FA0; --accent-ink:#FFFFFF;
+  --s-works:#2B7A4B; --s-works-bg:#E3F1E7;
+  --s-in_progress:#9A6A12; --s-in_progress-bg:#FBF0D9;
+  --s-idea:#6A4C9C; --s-idea-bg:#EEE8F7;
+  --s-pitfall:#B0281F; --s-pitfall-bg:#FBE5E2;
+  --s-question:#0D6E8A; --s-question-bg:#DFF1F6;
+  --shadow:0 8px 30px rgba(20,30,25,.14);
+  /* System fonts only: a web font would make every page load a request to a third party. */
+  --f-body:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-sign:"Arial Narrow","Liberation Sans Narrow","DejaVu Sans Condensed",system-ui,sans-serif;
+  --f-mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;
+  --ground:#111513; --surface:#191E1B; --raised:#1F2522; --ink:#E4E9E5; --muted:#9BA69F; --line:#2E3632;
+  --accent:#7EA6E6; --accent-ink:#0E1A2E;
+  --s-works:#6CC18D; --s-works-bg:#1A2E22; --s-in_progress:#E0B35A; --s-in_progress-bg:#32291A;
+  --s-idea:#B49BE0; --s-idea-bg:#29223A; --s-pitfall:#F08A80; --s-pitfall-bg:#3A1D1A;
+  --s-question:#62C3DE; --s-question-bg:#15303A; --shadow:0 8px 30px rgba(0,0,0,.5);
+}}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#111513; --surface:#191E1B; --raised:#1F2522; --ink:#E4E9E5; --muted:#9BA69F; --line:#2E3632;
+  --accent:#7EA6E6; --accent-ink:#0E1A2E;
+  --s-works:#6CC18D; --s-works-bg:#1A2E22; --s-in_progress:#E0B35A; --s-in_progress-bg:#32291A;
+  --s-idea:#B49BE0; --s-idea-bg:#29223A; --s-pitfall:#F08A80; --s-pitfall-bg:#3A1D1A;
+  --s-question:#62C3DE; --s-question-bg:#15303A; --shadow:0 8px 30px rgba(0,0,0,.5);
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--ground);color:var(--ink);font:16px/1.5 var(--f-body);padding-inline:16px;padding-block:24px 110px}
+a{color:inherit}
+.wrap{max-width:1240px;margin-inline:auto;display:grid;gap:28px}
+h1,h2,h3{margin:0;text-wrap:balance}
+button,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* header */
+.head{display:grid;gap:14px}
+.eyebrow{font:500 12px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.head h1{font:700 clamp(30px,5vw,46px)/1.05 var(--f-sign);letter-spacing:.01em}
+.lead{max-width:68ch;color:var(--ink);margin:0}
+.howto{max-width:68ch;color:var(--muted);margin:0}
+.bar{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
+.legend,.filters{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:3px 10px;font:600 12px/1.4 var(--f-body);letter-spacing:.02em;white-space:nowrap}
+.chip::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.st-works{color:var(--s-works);background:var(--s-works-bg)}
+.st-in_progress{color:var(--s-in_progress);background:var(--s-in_progress-bg)}
+.st-idea{color:var(--s-idea);background:var(--s-idea-bg)}
+.st-pitfall{color:var(--s-pitfall);background:var(--s-pitfall-bg)}
+.st-question{color:var(--s-question);background:var(--s-question-bg)}
+.filters button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 12px;font-size:13px}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--ground);border-color:var(--ink)}
+.updated{font:12px var(--f-mono);color:var(--muted);margin-left:auto}
+.back{font:500 12px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-decoration:none}
+.back:hover{color:var(--ink)}
+.nav{display:flex;justify-content:space-between;align-items:center}
+.delmap{border:0;background:none;padding:0;cursor:pointer}
+.delmap:hover{color:var(--s-pitfall)}
+.listen{color:var(--muted);background:var(--surface);border:1px solid var(--line)}
+.listen.on{color:var(--s-works);background:var(--s-works-bg);border-color:transparent}
+
+/* map list */
+.maps{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.mapcard{display:grid;gap:6px;text-decoration:none;border:1px solid var(--line);background:var(--raised);border-radius:6px;padding:14px 16px}
+.mapcard:hover{border-color:var(--ink)}
+.mapcard h2{font:700 22px/1.1 var(--f-sign)}
+.mapcard p{margin:0;font-size:14.5px;color:var(--muted)}
+.mapcard .chip{justify-self:start}
+
+/* zones */
+.zone{display:grid;grid-template-columns:150px 1fr;gap:20px;border-top:2px solid var(--ink);padding-top:14px}
+.zlabel{display:grid;gap:4px;align-content:start}
+.zcode{font:700 40px/1 var(--f-sign);color:var(--ink)}
+.zname{font:700 18px/1.1 var(--f-sign);text-transform:uppercase;letter-spacing:.06em}
+.zhint{font-size:13px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.flow{display:grid;gap:14px}
+.frow{display:flex;align-items:stretch;gap:0;overflow-x:auto;padding-bottom:2px}
+.frow .tile{flex:1 1 0;min-width:190px}
+.arrow{flex:0 0 34px;display:grid;place-items:center;color:var(--muted);font:600 20px var(--f-sign)}
+.tile{position:relative;text-align:left;border:1px solid var(--line);background:var(--raised);border-radius:6px;padding:12px 14px 14px;display:grid;gap:8px;align-content:start;transition:border-color .15s,transform .15s}
+.tile:hover{border-color:var(--ink)}
+.tile.dim{opacity:.28}
+.tile h3{font:600 17px/1.25 var(--f-body)}
+.tile p{margin:0;font-size:14.5px;color:var(--muted)}
+.tile p b{color:var(--ink);font-weight:600}
+.ttop{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.count{font:500 12px/1 var(--f-mono);border-radius:4px;padding:4px 6px;background:var(--ink);color:var(--ground)}
+.count.draft{background:transparent;color:var(--ink);border:1px dashed var(--ink)}
+.tile.fresh{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.chip.fresh{color:var(--accent);background:transparent;border:1px solid var(--accent)}
+.tbadges{display:flex;gap:6px;align-items:center}
+.msg{padding:14px 16px;border-radius:6px;background:var(--surface);border:1px solid var(--line)}
+.msg.err{border-color:var(--s-pitfall);color:var(--s-pitfall);display:flex;gap:12px;align-items:flex-start;justify-content:space-between}
+
+/* drawer */
+.scrim{position:fixed;inset:0;background:rgba(10,15,12,.35);z-index:20}
+.drawer{position:fixed;z-index:21;top:0;right:0;bottom:0;width:min(460px,100%);background:var(--surface);box-shadow:var(--shadow);display:grid;grid-template-rows:auto 1fr auto;padding-top:env(safe-area-inset-top,0px)}
+.dhead{padding:18px 20px 14px;border-bottom:1px solid var(--line);display:grid;gap:8px}
+.dhead .ttop h2{font:700 24px/1.1 var(--f-sign)}
+.close{border:1px solid var(--line);background:var(--raised);border-radius:4px;width:34px;height:34px;flex:none}
+.dbody{overflow-y:auto;padding:16px 20px;display:grid;gap:14px;align-content:start}
+.dbody .desc{margin:0;color:var(--ink)}
+.notes{display:grid;gap:10px}
+.note{border:1px solid var(--line);border-radius:6px;padding:10px 12px;background:var(--raised);display:grid;gap:6px}
+.note.draft{border-style:dashed}
+.nmeta{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font:12px var(--f-mono);color:var(--muted)}
+.ntype{font:600 12px/1 var(--f-body);text-transform:uppercase;letter-spacing:.06em;color:var(--ink)}
+.note p{margin:0;white-space:pre-wrap}
+.reply{border-left:2px solid var(--accent);padding-left:10px;color:var(--muted);font-size:14px}
+.reply b{color:var(--ink)}
+.link{border:0;background:none;padding:0;color:var(--s-pitfall);font:12px var(--f-mono);text-decoration:underline}
+.form{border-top:1px solid var(--line);padding:14px 20px calc(16px + env(safe-area-inset-bottom,0px));display:grid;gap:10px;background:var(--surface)}
+.types{display:flex;gap:6px}
+.types button{flex:1;border:1px solid var(--line);background:var(--raised);border-radius:4px;padding:6px 4px;font-weight:600;font-size:14px}
+.types button[aria-pressed="true"]{background:var(--ink);color:var(--ground);border-color:var(--ink)}
+textarea{width:100%;min-height:84px;resize:vertical;border:1px solid var(--line);border-radius:4px;background:var(--raised);padding:8px 10px}
+.primary{border:0;border-radius:4px;background:var(--accent);color:var(--accent-ink);font-weight:600;padding:9px 16px}
+.primary:disabled{opacity:.45;cursor:default}
+
+/* send bar */
+.send{position:fixed;z-index:10;left:0;right:0;bottom:0;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--ground)}
+.send .in{max-width:1240px;margin-inline:auto;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
+.send .txt{flex:1 1 260px;font-size:15px}
+.send code{font:500 14px var(--f-mono);background:rgba(127,127,127,.25);padding:2px 6px;border-radius:3px}
+.send .primary{background:var(--ground);color:var(--ink)}
+.send .ghost{border:1px solid currentColor;background:none;color:inherit;border-radius:4px;padding:8px 12px}
+.send .pick{display:flex;flex-wrap:wrap;gap:8px}
+
+@media (max-width:720px){
+  .zone{grid-template-columns:1fr;gap:12px}
+  .zlabel{grid-template-columns:auto 1fr;column-gap:12px;align-items:end}
+  .zcode{font-size:30px;grid-row:span 2}
+  .frow{flex-direction:column;overflow:visible}
+  .frow .tile{min-width:0}
+  .arrow{flex-basis:24px;transform:rotate(90deg)}
+  .updated{margin-left:0}
+}
+@media (prefers-reduced-motion:reduce){.tile{transition:none}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="head">
+    <div class="nav">
+      <a class="back" id="back" href="#" hidden data-t="allMaps"></a>
+      <button type="button" class="back delmap" id="delMap" hidden data-t="deleteMap"></button>
+    </div>
+    <div class="eyebrow" id="eyebrow"></div>
+    <h1 id="title" data-t="loading"></h1>
+    <p class="lead" id="subtitle"></p>
+    <p class="howto" id="howto"></p>
+    <div class="bar">
+      <span class="chip listen" id="listen" data-t="checkingClaude"></span>
+      <div class="legend" id="legend" data-t-aria="legendAria"></div>
+      <div class="filters" id="filters" data-t-aria="filtersAria"></div>
+      <span class="updated" id="updated"></span>
+    </div>
+  </header>
+  <div id="status" class="msg" data-t="connecting"></div>
+  <main id="maps" class="maps" hidden></main>
+  <main id="zones" class="wrap"></main>
+</div>
+
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="drawer" hidden aria-labelledby="dTitle">
+  <div class="dhead">
+    <div class="ttop"><span id="dStatus"></span><button class="close" id="dClose" data-t-aria="close">✕</button></div>
+    <div class="ttop"><h2 id="dTitle"></h2></div>
+  </div>
+  <div class="dbody">
+    <p class="desc" id="dDesc"></p>
+    <div class="eyebrow" data-t="tileNotes"></div>
+    <div class="notes" id="dNotes"></div>
+  </div>
+  <form class="form" id="noteForm">
+    <div class="types" id="types" role="group" data-t-aria="noteTypeAria">
+      <button type="button" data-type="comment" aria-pressed="true" data-t="comment"></button>
+      <button type="button" data-type="question" aria-pressed="false" data-t="question"></button>
+      <button type="button" data-type="suggestion" aria-pressed="false" data-t="suggestion"></button>
+    </div>
+    <textarea id="noteText" data-t-aria="noteTextAria"></textarea>
+    <button class="primary" id="noteAdd" type="submit" disabled data-t="addDraft"></button>
+  </form>
+</aside>
+
+<div class="send" id="sendBar" hidden>
+  <div class="in">
+    <span class="txt" id="sendTxt"></span>
+    <span class="pick" id="pickBox" hidden></span>
+    <button class="ghost" id="copyBtn" type="button" hidden data-t="copy"></button>
+    <button class="primary" id="sendBtn" type="button" data-t="send"></button>
+  </div>
+</div>
+
+<script>
+// Polish plural: 2-4 (but not 12-14) take a different form than 5+.
+function isFew(n) { return n % 10 >= 2 && n % 10 <= 4 && !(n % 100 >= 12 && n % 100 <= 14); }
+
+// Data values (statuses, note types and states) are English ids in the files; only labels change.
+const LANG = (navigator.language || "en").toLowerCase().startsWith("pl") ? "pl" : "en";
+const TEXT = {
+  pl: {
+    status: { works: "działa", in_progress: "w toku", idea: "pomysł", pitfall: "pułapka / ryzyko", question: "otwarte pytanie" },
+    noteType: { comment: "Komentarz", question: "Pytanie", suggestion: "Sugestia" },
+    state: { draft: "szkic", sent: "wysłane", done: "załatwione" },
+    comment: "Komentarz", question: "Pytanie", suggestion: "Sugestia",
+    allMaps: "← Wszystkie mapy", deleteMap: "Usuń mapę", loading: "Wczytywanie…", checkingClaude: "sprawdzam Claude…",
+    legendAria: "Legenda statusów", filtersAria: "Filtry", connecting: "Łączę się z serwerem mapy…", close: "Zamknij",
+    tileNotes: "Uwagi do tego kafelka", noteTypeAria: "Typ uwagi", noteTextAria: "Treść uwagi",
+    notePlaceholder: "Co chcesz powiedzieć o tym kafelku?", addDraft: "Dodaj do szkiców", copy: "Kopiuj", send: "Wyślij",
+    projectMaps: "Mapy projektów", projectMap: "Mapa projektu", mapTitle: (t) => `Mapa ${t}`,
+    error: "Błąd", closeMsg: "Zamknij komunikat", serverSaid: (s) => `serwer odpowiedział ${s}`,
+    fresh: "nowe", changed: "zmienione", checkCommand: (t) => `sprawdź mapę ${t}`,
+    openBadge: (n) => `${n} otw.`, openTitle: "uwagi czekające na odpowiedź", draftBadge: (n) => `${n} szkic`, draftTitle: "szkice",
+    listening: (n) => n < 2 ? "Claude słucha" : `Claude słucha (${n} ${isFew(n) ? "sesje" : "sesji"})`,
+    waiting: (n) => n === 1 ? "1 uwaga czeka" : isFew(n) ? `${n} uwagi czekają` : `${n} uwag czeka`,
+    notListening: "Claude nie słucha", listeningTitle: "Wyślij obudzi otwartą sesję Claude w kilka sekund",
+    notListeningTitle: "Uwagi zapiszą się, ale Claude zobaczy je dopiero po „sprawdź mapę” w terminalu",
+    updated: (d) => `aktualizacja ${d}`,
+    filters: { all: "Wszystko", notes: "Z uwagami", questions: "Pytania", risks: "Pułapki" }, changes: (n) => `Zmiany (${n})`,
+    choose: "Słucha kilka sesji - którą obudzić?", since: "od", cancel: "Anuluj",
+    draftsWaiting: (n) => `Szkice: <b>${n}</b> ${n === 1 ? "uwaga czeka" : "uwag czeka"} na wysłanie.`,
+    notListeningNow: " Claude teraz nie słucha - uwagi się zapiszą i poczekają.",
+    sentListening: (n) => `Wysłane do Claude: ${n}. Odpowiedzi pojawią się przy kafelkach za kilka sekund.`,
+    sentNotListening: (n, cmd) => `Zapisane: ${n}. Claude nie słucha - napisz w Claude Code: <code>${cmd}</code>`,
+    del: "usuń", noNotes: "Brak uwag. Dodaj pierwszą poniżej.", chooseMap: "Wybierz mapę.",
+    noMaps: "Nie ma jeszcze żadnej mapy. Powiedz Claude: „zrób mapę projektu”.",
+    nobodyTitle: "Otwórz Claude w katalogu projektu i napisz cokolwiek - sesja zacznie słuchać i odpowie",
+    nobody: " - nikt nie słucha",
+    where: { read: "odczyt mapy", list: "lista map", save: "zapis uwagi", send: "wysyłanie", delDraft: "usuwanie szkicu", delMap: "usuwanie mapy" },
+    confirmDelete: (t) => `Usunąć mapę „${t}” razem ze wszystkimi uwagami?\n\nZacommitowaną wersję da się przywrócić z gita, uwagi dodane od ostatniego commita przepadną.`,
+    copied: "Skopiowane", copyManually: "Zaznacz tekst ręcznie",
+  },
+  en: {
+    status: { works: "works", in_progress: "in progress", idea: "idea", pitfall: "pitfall / risk", question: "open question" },
+    noteType: { comment: "Comment", question: "Question", suggestion: "Suggestion" },
+    state: { draft: "draft", sent: "sent", done: "done" },
+    comment: "Comment", question: "Question", suggestion: "Suggestion",
+    allMaps: "← All maps", deleteMap: "Delete map", loading: "Loading…", checkingClaude: "checking Claude…",
+    legendAria: "Status legend", filtersAria: "Filters", connecting: "Connecting to the map server…", close: "Close",
+    tileNotes: "Notes on this tile", noteTypeAria: "Note type", noteTextAria: "Note text",
+    notePlaceholder: "What do you want to say about this tile?", addDraft: "Add to drafts", copy: "Copy", send: "Send",
+    projectMaps: "Project maps", projectMap: "Project map", mapTitle: (t) => `Map ${t}`,
+    error: "Error", closeMsg: "Close message", serverSaid: (s) => `server replied ${s}`,
+    fresh: "new", changed: "changed", checkCommand: (t) => `check the map ${t}`,
+    openBadge: (n) => `${n} open`, openTitle: "notes waiting for a reply", draftBadge: (n) => `${n} draft`, draftTitle: "drafts",
+    listening: (n) => n < 2 ? "Claude listens" : `Claude listens (${n} sessions)`,
+    waiting: (n) => n === 1 ? "1 note waits" : `${n} notes wait`,
+    notListening: "Claude is not listening", listeningTitle: "Send wakes the open Claude session within seconds",
+    notListeningTitle: "Notes are saved, but Claude sees them only after “check the map” in the terminal",
+    updated: (d) => `updated ${d}`,
+    filters: { all: "All", notes: "With notes", questions: "Questions", risks: "Pitfalls" }, changes: (n) => `Changes (${n})`,
+    choose: "Several sessions listen - which one to wake?", since: "since", cancel: "Cancel",
+    draftsWaiting: (n) => `Drafts: <b>${n}</b> ${n === 1 ? "note waits" : "notes wait"} to be sent.`,
+    notListeningNow: " Claude is not listening now - notes are saved and will wait.",
+    sentListening: (n) => `Sent to Claude: ${n}. Replies appear next to the tiles within seconds.`,
+    sentNotListening: (n, cmd) => `Saved: ${n}. Claude is not listening - type in Claude Code: <code>${cmd}</code>`,
+    del: "delete", noNotes: "No notes yet. Add the first one below.", chooseMap: "Choose a map.",
+    noMaps: "No maps yet. Tell Claude: “make a project map”.",
+    nobodyTitle: "Open Claude in the project directory and type anything - the session starts listening and replies",
+    nobody: " - nobody listens",
+    where: { read: "reading the map", list: "map list", save: "saving the note", send: "sending", delDraft: "deleting the draft", delMap: "deleting the map" },
+    confirmDelete: (t) => `Delete the map “${t}” with all its notes?\n\nA committed version can be restored from git; notes added since the last commit are lost.`,
+    copied: "Copied", copyManually: "Select the text by hand",
+  },
+}[LANG];
+const STATUS = TEXT.status;
+const NOTE_TYPES = TEXT.noteType;
+const STATE_LABEL = TEXT.state;
+const ZONE_CODES = "ABCDEFGHIJ";
+const POLL_MS = 2000;
+const VISIT_KEY_PREFIX = "project-map-lastVisit-";
+
+const state = {
+  slug: null, meta: null, tiles: [], notes: [], listening: false, lastJson: "",
+  filter: "all", openTile: null, noteType: "comment", lastSent: 0, sentListening: false, sessions: [], choosing: false,
+  errorOpen: false, prevVisit: null,
+};
+const $ = (id) => document.getElementById(id);
+
+function esc(s) {
+  return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+// Tile bodies may carry **bold**; everything else is escaped text.
+function rich(s) {
+  return esc(s).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/\n/g, "<br>");
+}
+function fmtDate(iso) { return iso ? iso.slice(0, 16).replace("T", " ") : ""; }
+
+// An error stays on screen until the viewer closes it; a render must not hide it,
+// or a failed save would vanish on the next poll.
+function showError(where, e) {
+  console.error(where, e);
+  state.errorOpen = true;
+  const box = $("status");
+  box.hidden = false;
+  box.className = "msg err";
+  box.innerHTML = `<span>${TEXT.error} (${esc(where)}): ${esc(e?.message || e)}</span>
+    <button type="button" class="close" id="errClose" aria-label="${TEXT.closeMsg}">✕</button>`;
+  $("errClose").addEventListener("click", () => { state.errorOpen = false; box.hidden = true; });
+}
+
+async function api(method, path, body) {
+  const res = await fetch(path, {
+    method, headers: body ? { "Content-Type": "application/json" } : {},
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || TEXT.serverSaid(res.status));
+  return data;
+}
+
+// First visit (or blocked storage) falls back to page-open time, so changes made
+// during this visit still light up.
+function loadPrevVisit(slug) {
+  const now = new Date().toISOString();
+  let prev = null;
+  try { prev = localStorage.getItem(VISIT_KEY_PREFIX + slug); } catch (e) { console.warn("lastVisit read blocked", e); }
+  try { localStorage.setItem(VISIT_KEY_PREFIX + slug, now); } catch (e) { console.warn("lastVisit write blocked", e); }
+  return prev || now;
+}
+function freshness(t) {
+  if (t.addedAt && t.addedAt > state.prevVisit) return TEXT.fresh;
+  if (t.changedAt && t.changedAt > state.prevVisit) return TEXT.changed;
+  return "";
+}
+
+function notesFor(tileId) { return state.notes.filter((n) => n.tileId === tileId); }
+function drafts() { return state.notes.filter((n) => n.state === "draft"); }
+function checkCommand() { return TEXT.checkCommand(state.meta?.title || "").trim(); }
+
+function tileMatches(t) {
+  const ns = notesFor(t.id).filter((n) => n.state !== "done");
+  if (state.filter === "notes") return ns.length > 0;
+  if (state.filter === "questions") return t.status === "question" || ns.some((n) => n.type === "question");
+  if (state.filter === "risks") return t.status === "pitfall";
+  if (state.filter === "changes") return !!freshness(t);
+  return true;
+}
+
+function tileHtml(t) {
+  const ns = notesFor(t.id);
+  const open = ns.filter((n) => n.state === "sent").length;
+  const draft = ns.filter((n) => n.state === "draft").length;
+  const badge = open ? `<span class="count" title="${TEXT.openTitle}">${TEXT.openBadge(open)}</span>`
+    : draft ? `<span class="count draft" title="${TEXT.draftTitle}">${TEXT.draftBadge(draft)}</span>` : "";
+  const fresh = freshness(t);
+  const freshChip = fresh ? `<span class="chip fresh">${fresh}</span>` : "";
+  return `<button class="tile${fresh ? " fresh" : ""}${tileMatches(t) ? "" : " dim"}" data-tile="${esc(t.id)}">
+    <div class="ttop"><span class="chip st-${esc(t.status)}">${esc(STATUS[t.status] || t.status)}</span><span class="tbadges">${freshChip}${badge}</span></div>
+    <h3>${esc(t.title)}</h3><p>${rich(t.body)}</p></button>`;
+}
+
+const listeningLabel = TEXT.listening;
+const waitingLabel = TEXT.waiting;
+
+function renderListening() {
+  const el = $("listen");
+  el.className = `chip listen${state.listening ? " on" : ""}`;
+  el.textContent = state.listening ? listeningLabel(state.sessions.length) : TEXT.notListening;
+  el.title = state.listening ? TEXT.listeningTitle : TEXT.notListeningTitle;
+}
+
+function renderHeader() {
+  const m = state.meta;
+  document.title = TEXT.mapTitle(m.title);
+  $("eyebrow").textContent = TEXT.projectMap;
+  $("title").textContent = m.title;
+  $("subtitle").textContent = m.subtitle || "";
+  $("howto").textContent = m.howToRead || "";
+  $("updated").textContent = m.updatedAt ? TEXT.updated(m.updatedAt) : "";
+  $("legend").innerHTML = Object.entries(STATUS).map(([k, v]) => `<span class="chip st-${k}">${v}</span>`).join("");
+  const changed = state.tiles.filter((t) => freshness(t)).length;
+  if (!changed && state.filter === "changes") state.filter = "all";
+  const filters = { ...TEXT.filters };
+  if (changed) filters.changes = TEXT.changes(changed);
+  $("filters").innerHTML = Object.entries(filters)
+    .map(([k, v]) => `<button type="button" data-filter="${k}" aria-pressed="${state.filter === k}">${v}</button>`).join("");
+  renderListening();
+}
+
+function renderZones() {
+  const zones = [...(state.meta.zones || [])].sort((a, b) => a.order - b.order);
+  $("zones").innerHTML = zones.map((z, i) => {
+    const tiles = state.tiles.filter((t) => t.zone === z.id).sort((a, b) => (a.row - b.row) || (a.order - b.order));
+    if (!tiles.length) return "";
+    let body;
+    if (z.flow) {
+      const rows = [...new Set(tiles.map((t) => t.row))];
+      body = `<div class="flow">${rows.map((r) => `<div class="frow">${
+        tiles.filter((t) => t.row === r).map(tileHtml).join('<span class="arrow" aria-hidden="true">→</span>')
+      }</div>`).join("")}</div>`;
+    } else {
+      body = `<div class="grid">${tiles.map(tileHtml).join("")}</div>`;
+    }
+    return `<section class="zone"><div class="zlabel"><span class="zcode">${ZONE_CODES[i]}</span>
+      <h2 class="zname">${esc(z.label)}</h2><span class="zhint">${esc(z.hint || "")}</span></div>${body}</section>`;
+  }).join("");
+}
+
+function renderSendBar() {
+  const n = drafts().length;
+  const bar = $("sendBar");
+  bar.hidden = !(n || state.lastSent);
+  const choosing = !!n && state.choosing;
+  $("sendBtn").hidden = !n || choosing;
+  $("pickBox").hidden = !choosing;
+  $("copyBtn").hidden = !(!n && state.lastSent && !state.sentListening);
+  if (choosing) {
+    $("sendTxt").textContent = TEXT.choose;
+    $("pickBox").innerHTML = state.sessions.map((x) => `<button class="primary" type="button" data-session="${esc(x.id)}">`
+      + `${esc(x.topic)} · ${TEXT.since} ${esc(new Date(x.since).toLocaleTimeString(LANG, { hour: "2-digit", minute: "2-digit" }))}</button>`).join("")
+      + `<button class="ghost" type="button" data-session="">${TEXT.cancel}</button>`;
+  } else if (n) {
+    $("sendTxt").innerHTML = TEXT.draftsWaiting(n) + (state.listening ? "" : TEXT.notListeningNow);
+  } else if (state.lastSent && state.sentListening) {
+    $("sendTxt").textContent = TEXT.sentListening(state.lastSent);
+  } else if (state.lastSent) {
+    $("sendTxt").innerHTML = TEXT.sentNotListening(state.lastSent, esc(checkCommand()));
+  }
+}
+
+function renderDrawer() {
+  const t = state.tiles.find((x) => x.id === state.openTile);
+  if (!t) { $("drawer").hidden = true; $("scrim").hidden = true; return; }
+  $("drawer").hidden = false; $("scrim").hidden = false;
+  $("dStatus").innerHTML = `<span class="chip st-${esc(t.status)}">${esc(STATUS[t.status] || t.status)}</span>`;
+  $("dTitle").textContent = t.title;
+  $("dDesc").innerHTML = rich(t.body);
+  const ns = notesFor(t.id).sort((a, b) => (a.createdAt || "").localeCompare(b.createdAt || ""));
+  $("dNotes").innerHTML = ns.length ? ns.map((n) => `<div class="note ${esc(n.state)}">
+      <div class="nmeta"><span class="ntype">${esc(NOTE_TYPES[n.type] || n.type)}</span>
+        <span>${esc(STATE_LABEL[n.state] || n.state)}</span><span>${esc(fmtDate(n.createdAt))}</span>
+        ${n.state === "draft" ? `<button type="button" class="link" data-del="${esc(n.id)}">${TEXT.del}</button>` : ""}</div>
+      <p>${esc(n.text)}</p>
+      ${n.reply ? `<div class="reply"><b>Claude:</b> ${esc(n.reply)}</div>` : ""}</div>`).join("")
+    : `<p class="zhint">${TEXT.noNotes}</p>`;
+}
+
+function renderMap() {
+  if (!state.errorOpen) $("status").hidden = true;
+  renderHeader(); renderZones(); renderSendBar(); renderDrawer();
+}
+
+function renderIndex(data) {
+  document.title = TEXT.projectMaps;
+  if (!state.errorOpen) $("status").hidden = true;
+  $("title").textContent = TEXT.projectMaps;
+  $("subtitle").textContent = data.maps.length ? TEXT.chooseMap : TEXT.noMaps;
+  $("maps").innerHTML = data.maps.map((m) => `<a class="mapcard" href="#${esc(m.slug)}">
+    <h2>${esc(m.title)}</h2><p>${esc(m.subtitle)}</p>
+    ${m.listeners ? `<span class="chip listen on">${listeningLabel(m.listeners)}</span>`
+      : m.openNotes ? `<span class="chip st-in_progress" title="${TEXT.nobodyTitle}">${waitingLabel(m.openNotes)}${TEXT.nobody}</span>` : ""}
+    <span class="updated">${TEXT.updated(esc(m.updatedAt))}${m.openNotes && m.listeners ? ` · ${waitingLabel(m.openNotes)}` : ""}</span></a>`).join("");
+}
+
+async function poll() {
+  try {
+    if (!state.slug) return renderIndex(await api("GET", "/api/maps"));
+    const data = await api("GET", `/api/maps/${encodeURIComponent(state.slug)}`);
+    const json = JSON.stringify(data);
+    // Skip identical polls: a full re-render every 2 s would flicker hover states.
+    if (json === state.lastJson) return;
+    state.lastJson = json;
+    Object.assign(state, { meta: data.meta, tiles: data.tiles, notes: data.notes, sessions: data.sessions, listening: data.sessions.length > 0 });
+    renderMap();
+  } catch (e) {
+    showError(state.slug ? TEXT.where.read : TEXT.where.list, e);
+  }
+}
+
+function openView() {
+  state.slug = decodeURIComponent(location.hash.slice(1)) || null;
+  Object.assign(state, { meta: null, tiles: [], notes: [], lastJson: "", openTile: null, lastSent: 0, filter: "all", choosing: false });
+  const isMap = !!state.slug;
+  if (isMap) state.prevVisit = loadPrevVisit(state.slug);
+  $("back").hidden = !isMap;
+  $("delMap").hidden = !isMap;
+  // Each map has its own watcher, so a single chip on the list would not mean anything.
+  $("listen").hidden = !isMap;
+  $("maps").hidden = isMap;
+  $("zones").innerHTML = "";
+  for (const id of ["legend", "filters", "updated", "howto"]) $(id).textContent = "";
+  $("eyebrow").textContent = isMap ? TEXT.projectMap : TEXT.projectMaps;
+  $("sendBar").hidden = true;
+  renderDrawer();
+  poll();
+}
+
+async function addNote(ev) {
+  ev.preventDefault();
+  const text = $("noteText").value.trim();
+  if (!text || !state.openTile) return;
+  $("noteAdd").disabled = true;
+  try {
+    await api("POST", `/api/maps/${encodeURIComponent(state.slug)}/notes`, { tileId: state.openTile, type: state.noteType, text });
+    $("noteText").value = "";
+    state.lastSent = 0;
+    await poll();
+  } catch (e) { showError(TEXT.where.save, e); }
+  $("noteAdd").disabled = !$("noteText").value.trim();
+}
+
+function startSend() {
+  if (state.sessions.length > 1) {
+    state.choosing = true;
+    return renderSendBar();
+  }
+  sendDrafts(null);
+}
+
+async function sendDrafts(session) {
+  state.choosing = false;
+  $("sendBtn").disabled = true;
+  try {
+    const res = await api("POST", `/api/maps/${encodeURIComponent(state.slug)}/send`, { session });
+    state.lastSent = res.sent;
+    state.sentListening = res.listening;
+    await poll();
+    renderSendBar();
+  } catch (e) { showError(TEXT.where.send, e); }
+  $("sendBtn").disabled = false;
+}
+
+async function deleteDraft(id) {
+  try {
+    await api("DELETE", `/api/maps/${encodeURIComponent(state.slug)}/notes/${encodeURIComponent(id)}`);
+    await poll();
+  } catch (e) { showError(TEXT.where.delDraft, e); }
+}
+
+async function deleteMap() {
+  const title = state.meta?.title || state.slug;
+  if (!confirm(TEXT.confirmDelete(title))) return;
+  try {
+    await api("DELETE", `/api/maps/${encodeURIComponent(state.slug)}`);
+    location.hash = "";
+  } catch (e) { showError(TEXT.where.delMap, e); }
+}
+
+function applyStaticText() {
+  document.documentElement.lang = LANG;
+  document.querySelectorAll("[data-t]").forEach((el) => { el.textContent = TEXT[el.dataset.t]; });
+  document.querySelectorAll("[data-t-aria]").forEach((el) => el.setAttribute("aria-label", TEXT[el.dataset.tAria]));
+  $("noteText").placeholder = TEXT.notePlaceholder;
+}
+
+function wireUi() {
+  window.addEventListener("hashchange", openView);
+  $("zones").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-tile]");
+    if (b) { state.openTile = b.dataset.tile; renderDrawer(); $("noteText").focus(); }
+  });
+  $("filters").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-filter]");
+    if (b) { state.filter = b.dataset.filter; renderMap(); }
+  });
+  const close = () => { state.openTile = null; renderDrawer(); };
+  $("dClose").addEventListener("click", close);
+  $("scrim").addEventListener("click", close);
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && state.openTile) close(); });
+  $("types").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-type]");
+    if (!b) return;
+    state.noteType = b.dataset.type;
+    $("types").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x === b));
+  });
+  $("noteText").addEventListener("input", () => { $("noteAdd").disabled = !$("noteText").value.trim(); });
+  $("noteForm").addEventListener("submit", addNote);
+  $("dNotes").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-del]");
+    if (b) deleteDraft(b.dataset.del);
+  });
+  $("sendBtn").addEventListener("click", startSend);
+  $("pickBox").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-session]");
+    if (!b) return;
+    if (b.dataset.session) return sendDrafts(b.dataset.session);
+    state.choosing = false;
+    renderSendBar();
+  });
+  $("delMap").addEventListener("click", deleteMap);
+  $("copyBtn").addEventListener("click", async () => {
+    try { await navigator.clipboard.writeText(checkCommand()); $("copyBtn").textContent = TEXT.copied; }
+    catch (e) { console.error("clipboard", e); $("copyBtn").textContent = TEXT.copyManually; }
+  });
+}
+
+applyStaticText();
+wireUi();
+openView();
+setInterval(poll, POLL_MS);
+</script>
+</body>
+</html>

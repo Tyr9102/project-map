@@ -1,0 +1,14 @@
+{
+  "name": "project-map",
+  "description": "Project Map - an interactive project map that wakes your Claude Code session.",
+  "owner": {
+    "name": "Patryk Tyrański",
+    "url": "https://github.com/Tyr9102"
+  },
+  "plugins": [
+    {
+      "name": "project-map",
+      "source": "./"
+    }
+  ]
+}
