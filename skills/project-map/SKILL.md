@@ -22,7 +22,7 @@ The map is for someone who does not read code. It shows the whole project at a g
 
 ## Which project?
 
-The user usually just says "make a project map" / "check the map" - it means the project in the session's working directory. Find the map whose `meta.projectDir` is that directory or its parent: `grep -l '"projectDir"' <maps>/*/map.json` and compare. Found - work on it (refresh, not a new one). None - a new map, slug and title from the directory name. When the working directory is the home directory or a general folder like Desktop, ask in one sentence which project. A name given by the user wins.
+The user usually just says "make a project map" / "check the map" - it means the project in the session's working directory. Find the map whose `meta.projectDir` is that directory or its parent: `grep -r --include=map.json '"projectDir"' <maps> || true` and compare (no `*/map.json` glob - zsh fails on it when there is no map yet; `|| true` because no match is an answer, not an error). Found - work on it (refresh, not a new one). None - a new map, slug and title from the directory name. When the working directory is the home directory or a general folder like Desktop, ask in one sentence which project. A name given by the user wins.
 
 ## Content rules
 
@@ -55,7 +55,7 @@ On "stop the map server" (e.g. after a plugin update the old version keeps runni
 ## Watcher permission
 
 Send wakes the session only when the user's permission rule `Bash(project-map-watch:*)` lets the watcher run. The plugin never grants it itself - the user decides, you only offer to write it.
-1. Check: `grep -sF 'Bash(project-map-watch:*)'` (files named one by one, no glob - zsh fails on a glob that matches nothing) in the user settings (`$CLAUDE_CONFIG_DIR/settings.json`, by default `~/.claude/settings.json`) and in the project's `.claude/settings.json` and `.claude/settings.local.json`. Found - nothing to do.
+1. Check: `grep -sF 'Bash(project-map-watch:*)' <files> || true` (files named one by one, no glob - zsh fails on a glob that matches nothing) in the user settings (`$CLAUDE_CONFIG_DIR/settings.json`, by default `~/.claude/settings.json`) and in the project's `.claude/settings.json` and `.claude/settings.local.json`. Found - nothing to do.
 2. Missing: ask once, with the reason in the same sentence, e.g. "Send on the map wakes this session only when the watcher may run - add the rule `Bash(project-map-watch:*)` to your Claude Code settings for you?"
 3. Yes: open the user settings file with Read first (Write and Edit refuse a file not read that way), add that string to `permissions.allow` (create `permissions` or `allow` when missing), change nothing else, keep it valid JSON. Then start the watcher with the command the hook gave; without that command in your context, the hook gives it on the user's next message.
 4. No, or the edit is refused (a declined prompt, auto mode blocking it): do not retry and do not ask again in this session. Tell the user in one sentence they can add the rule later with `/permissions`; until then the map works without waking - they say "check the map".
