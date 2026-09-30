@@ -1,5 +1,7 @@
 # Project Map
 
+[![tests](https://github.com/Tyr9102/project-map/actions/workflows/test.yml/badge.svg)](https://github.com/Tyr9102/project-map/actions/workflows/test.yml)
+
 A Claude Code plugin that turns a conversation about your project into a map of tiles in the browser. You leave notes on the tiles, click **Send**, and the Claude Code session you have open wakes up by itself, replies next to the tiles and updates the map.
 
 ![A note sent from the map wakes the Claude Code session, which replies and updates the map](docs/demo.gif)
