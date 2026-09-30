@@ -53,6 +53,7 @@ def main():
         sys.exit(f"usage: watcher.py <map slug> \"<session topic>\" [<Claude session id>] "
                  f"(map '{slug}' in {MAPS_DIR}, topic '{topic}')")
 
+    map_file = MAPS_DIR / slug / "map.json"
     signals_dir = MAPS_DIR / slug / "signals"
     # Id format must match SESSION_ID_RE in server.py.
     session_dir = signals_dir / "sessions" / secrets.token_hex(8)
@@ -65,8 +66,20 @@ def main():
         (session_dir / "start").write_text(now_iso() + "\n", encoding="utf-8")
         (session_dir / "claude_session").write_text(claude_session, encoding="utf-8")
         while True:
+            if not map_file.is_file():
+                # Deleted on the page. Exiting wakes the session anyway, so tell it why.
+                print(f"MAP DELETED: map '{slug}' was deleted on the page. Do not start the "
+                      "watcher again; tell the user in one sentence.", flush=True)
+                return
             # The page counts the session as listening only while this file keeps getting fresh.
-            (session_dir / "heartbeat").touch()
+            try:
+                (session_dir / "heartbeat").touch()
+            except FileNotFoundError:
+                # The map was renamed away for deletion right after the check above;
+                # a missing session directory under a living map is a real error.
+                if map_file.is_file():
+                    raise
+                continue
             claim_shared_signals(signals_dir, session_dir)
             received = sorted(session_dir.glob("*.json"))
             if received:

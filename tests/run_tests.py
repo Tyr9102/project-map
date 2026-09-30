@@ -128,12 +128,12 @@ def make_maps(tmp):
     return maps
 
 
-def start_watcher(maps):
+def start_watcher(maps, slug="sample"):
     # Through the plugin command, as Claude runs it; sh comes with Git for Windows.
-    proc = subprocess.Popen([shutil.which("sh"), str(ROOT / "bin" / "project-map-watch"), "sample", "test", SESSION_ID],
+    proc = subprocess.Popen([shutil.which("sh"), str(ROOT / "bin" / "project-map-watch"), slug, "test", SESSION_ID],
                             stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                             env={**os.environ, "PROJECT_MAP_DIR": str(maps)})
-    sessions = maps / "sample" / "signals" / "sessions"
+    sessions = maps / slug / "signals" / "sessions"
     started = wait_for(lambda: any(sessions.glob("*/heartbeat")))
     return proc, sessions, started
 
@@ -220,6 +220,25 @@ def test_server_stops(port, server):
     report(result.returncode == 0, name, f"exit code {result.returncode}: {result.stderr!r}")
 
 
+def test_delete_listened_map(port, maps):
+    name = "deleting a map a session listens to succeeds and the watcher exits with MAP DELETED"
+    (maps / "doomed").mkdir()
+    (maps / "doomed" / "map.json").write_text(json.dumps(MAP_JSON), encoding="utf-8")
+    proc, _sessions, started = start_watcher(maps, "doomed")
+    if not started:
+        proc.kill()
+        return report(False, name, "the watcher did not start listening")
+    status, body = request(port, "DELETE", "/api/maps/doomed", headers={"Origin": f"http://127.0.0.1:{port}"})
+    try:
+        out, err = proc.communicate(timeout=WAIT_SECONDS)
+    except subprocess.TimeoutExpired:
+        proc.kill()
+        return report(False, name, f"the watcher did not exit (delete {status} {body})")
+    ok = status == 200 and proc.returncode == 0 and "MAP DELETED" in out.decode("utf-8")
+    report(ok and not (maps / "doomed").exists(), name,
+           f"delete {status} {body}, exit {proc.returncode}: {out.decode()} {err.decode()}")
+
+
 def free_port():
     with socket.socket() as sock:
         sock.bind(("127.0.0.1", 0))
@@ -263,6 +282,7 @@ def main():
             test_watcher_killed(tmp)
         test_server_guards(port)
         test_send_wakes_watcher(port, server_maps)
+        test_delete_listened_map(port, server_maps)
         # Last: it ends the test server.
         test_server_stops(port, server)
     finally:

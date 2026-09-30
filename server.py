@@ -179,8 +179,12 @@ def delete_draft(slug, note_id):
 
 def delete_map(slug):
     d = map_dir(slug)
+    # Renamed first: a watcher of this map touches its heartbeat every second, and a file
+    # recreated mid-rmtree would fail the delete halfway. After the rename it finds nothing.
+    doomed = MAPS_DIR / f".deleting-{slug}-{secrets.token_hex(4)}"
     with write_lock:
-        shutil.rmtree(d)
+        os.replace(d, doomed)
+        shutil.rmtree(doomed)
     return {"deleted": slug}
 
 
