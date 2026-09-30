@@ -207,6 +207,17 @@ def test_send_wakes_watcher(port, maps):
     report("does it work?" in out.decode("utf-8"), name, "no note text in the watcher output")
 
 
+def test_server_stops(port, server):
+    name = "server.py --stop stops the running server"
+    result = subprocess.run([sys.executable, str(ROOT / "server.py"), "--stop"], capture_output=True,
+                            env={**os.environ, "PROJECT_MAP_PORT": str(port)})
+    try:
+        server.wait(timeout=WAIT_SECONDS)
+    except subprocess.TimeoutExpired:
+        return report(False, name, f"the server still runs ({result.stdout!r} {result.stderr!r})")
+    report(result.returncode == 0, name, f"exit code {result.returncode}: {result.stderr!r}")
+
+
 def free_port():
     with socket.socket() as sock:
         sock.bind(("127.0.0.1", 0))
@@ -250,6 +261,8 @@ def main():
             test_watcher_killed(tmp)
         test_server_guards(port)
         test_send_wakes_watcher(port, server_maps)
+        # Last: it ends the test server.
+        test_server_stops(port, server)
     finally:
         server.terminate()
         server.wait(timeout=WAIT_SECONDS)

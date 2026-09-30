@@ -50,6 +50,8 @@ Edit the files with Edit/Write as valid JSON; before every map commit run the ch
 3. The "does the map keep up" check (below).
 4. Give the user the address: `http://127.0.0.1:<port>/#<slug>`.
 
+On "stop the map server" (e.g. after a plugin update the old version keeps running): `python3 "${CLAUDE_PLUGIN_ROOT}/server.py" --stop`. The next session starts the new one.
+
 ## How Send wakes the session
 
 Send marks drafts as `sent` and writes a signal. The watcher sees it within a second, prints it (`SIGNAL: ...`) and exits (removing its heartbeat - the page shows "Claude is not listening" at once) - the notice about the finished background task starts your turn. Then:

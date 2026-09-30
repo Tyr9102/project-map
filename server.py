@@ -3,6 +3,7 @@
 Only the standard library - nothing to install.
     server.py            run in the foreground
     server.py --ensure   start it in the background unless it already runs
+    server.py --stop     stop the running one (e.g. the old version after an update)
 """
 import json
 import os
@@ -251,6 +252,11 @@ class Handler(BaseHTTPRequestHandler):
         parts = [p for p in self.path.split("?")[0].split("/") if p]
         if method == "GET" and not parts:
             return self._reply(200, PAGE, "text/html; charset=utf-8")
+        if method == "POST" and parts == ["api", "stop"]:
+            self._reply(200, {"stopped": True})
+            # shutdown() waits for serve_forever to return, which waits for this handler.
+            threading.Thread(target=self.server.shutdown).start()
+            return None
         if parts[:2] != ["api", "maps"]:
             raise ApiError(404, "no such path")
         rest = parts[2:]
@@ -323,7 +329,31 @@ def start_in_background(wait):
     return f"the server did not start - see {log_path}"
 
 
+def stop_running():
+    """Asks the map server on the port to exit. Returns an error message, or None when
+    it stopped."""
+    req = urllib.request.Request(f"http://{HOST}:{PORT}/api/stop", data=b"{}", method="POST",
+                                 headers={"Content-Type": "application/json"})
+    with urllib.request.urlopen(req, timeout=START_WAIT_S):
+        pass
+    deadline = time.time() + START_WAIT_S
+    while time.time() < deadline:
+        if server_status() is None:
+            return None
+        time.sleep(0.2)
+    return f"the map server on port {PORT} did not stop"
+
+
 def main():
+    if sys.argv[1:] == ["--stop"]:
+        status = server_status()
+        if status is None:
+            print("map server is not running")
+            sys.exit(0)
+        error = (f"port {PORT} is taken by another program, not the map server"
+                 if status == "other" else stop_running())
+        print(error or "map server stopped", file=sys.stderr if error else sys.stdout)
+        sys.exit(1 if error else 0)
     if sys.argv[1:] == ["--ensure"]:
         error = start_in_background(wait=True)
         print(error or f"map server: http://{HOST}:{PORT}, maps in {MAPS_DIR}", file=sys.stderr if error else sys.stdout)
