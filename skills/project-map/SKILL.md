@@ -10,7 +10,7 @@ The plugin lives in `${CLAUDE_PLUGIN_ROOT}`, the maps in the maps directory (`PR
 - `map.html` - the page: map list (`/`) and a map (`/#<slug>`), refreshes every 2 s.
 - `<maps>/<slug>/map.json` - header, zones, tiles. **Only you write it.**
 - `<maps>/<slug>/notes/<id>.json` - one note = one file. The page creates them; you only add the reply and the state.
-- `watcher.py`, run as the plugin command `project-map-watch` - the watcher: waits for Send; its exit wakes the session. It needs the user's permission rule `Bash(project-map-watch:*)` in auto mode; when a permission check blocks it, point the user to that rule - never work around the check.
+- `watcher.py`, run as the plugin command `project-map-watch` - the watcher: waits for Send; its exit wakes the session. It needs the user's permission rule `Bash(project-map-watch:*)` in auto mode; when a permission check blocks it, follow "Watcher permission" below - never work around the check.
 
 Python is `python3` below; on Windows use `python`. Map content (titles, tiles, replies) is in the user's language; the data keys and values listed under "Data model" stay exactly as written.
 
@@ -52,6 +52,14 @@ Edit the files with Edit/Write as valid JSON; before every map commit run the ch
 
 On "stop the map server" (e.g. after a plugin update the old version keeps running): `python3 "${CLAUDE_PLUGIN_ROOT}/server.py" --stop`. The next session starts the new one.
 
+## Watcher permission
+
+Send wakes the session only when the user's permission rule `Bash(project-map-watch:*)` lets the watcher run. The plugin never grants it itself - the user decides, you only offer to write it.
+1. Check: `grep -F 'Bash(project-map-watch:*)'` in the user settings (`$CLAUDE_CONFIG_DIR/settings.json`, by default `~/.claude/settings.json`) and in the project's `.claude/settings.json` and `.claude/settings.local.json`. Found - nothing to do.
+2. Missing: ask once, with the reason in the same sentence, e.g. "Send on the map wakes this session only when the watcher may run - add the rule `Bash(project-map-watch:*)` to your Claude Code settings for you?"
+3. Yes: add that string to `permissions.allow` in the user settings file (create `permissions` or `allow` when missing), change nothing else, keep it valid JSON. Then start the watcher with the command the hook gave; without that command in your context, the hook gives it on the user's next message.
+4. No, or the edit is refused (a declined prompt, auto mode blocking it): do not retry and do not ask again in this session. Tell the user in one sentence they can add the rule later with `/permissions`; until then the map works without waking - they say "check the map".
+
 ## How Send wakes the session
 
 Send marks drafts as `sent` and writes a signal. The watcher sees it within a second, prints it (`SIGNAL: ...`) and exits (removing its heartbeat - the page shows "Claude is not listening" at once) - the notice about the finished background task starts your turn. Then:
@@ -67,7 +75,8 @@ Several sessions may listen to one map - on Send the page asks the user which on
 1a. **Confirm in the code** every tile of the `how_it_works` and `features` zones - documentation describes pitfalls and decisions rather than every feature, and gets stale. A quick search is enough (`grep` with `--exclude='.env*'`, without `node_modules`/`.venv`) for the name of a screen, job or integration. No confirmation found - the tile gets status `question` and ends with a sentence saying it is not verified in the code, so the user sees where the map guesses. Same when adding tiles of these zones in mode 3.
 2. `check_map.py` OK.
 3. With git: commit "Map <Project>: new" (files by name).
-4. Give the map address.
+4. Check the watcher rule (section "Watcher permission").
+5. Give the map address.
 
 ## Mode 2: "check the map" or woken by the watcher
 

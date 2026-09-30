@@ -47,6 +47,8 @@ Potem zezwól na nasłuch - małe polecenie w tle, dzięki któremu **Wyślij** 
 }
 ```
 
+Możesz też pominąć ten krok: przy pierwszej mapie Claude zapyta, czy dodać regułę za Ciebie, i wpisze ją dopiero po „tak”.
+
 Bez niej tryb auto może zablokować nasłuch (uruchamia kod z wtyczki, nie z Twojego projektu). Mapa działa wtedy bez budzenia Claude'a - zamiast tego piszesz „sprawdź mapę”.
 
 Potem w katalogu projektu powiedz Claude'owi: **„zrób mapę projektu”**. Poda Ci adres, domyślnie `http://127.0.0.1:8765`.

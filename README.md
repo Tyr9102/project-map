@@ -47,6 +47,8 @@ Then allow the watcher - the small background command that lets **Send** wake yo
 }
 ```
 
+Or skip this step: when you make your first map, Claude asks whether to add the rule for you and writes it only after a yes.
+
 Without it, auto mode may block the watcher (it runs code from the plugin, not from your project) and the map works without waking Claude - you type "check the map" instead.
 
 Then, in a project directory, tell Claude: **"make a project map"**. It gives you the address, by default `http://127.0.0.1:8765`.

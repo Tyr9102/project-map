@@ -148,12 +148,11 @@ def on_user_prompt(payload):
          "(run_in_background: true, timeout: 7200000 - the default 30 min would silently "
          f"stop listening): project-map-watch {found['slug']} \"<topic>\" {session_id} - the "
          "topic is 2-4 words on what this session works on, in the user's language, without "
-         "quotes or special characters. Do not load the skill for this; when it starts, tell the "
+         "quotes or special characters. Do not load the skill to start it; when it starts, tell the "
          "user in one short sentence that Send on the map now wakes this session. If a permission check blocks it, do not retry and do not "
          "suggest running it with `!` (the watcher must be your background task to wake you); "
-         "tell the user in two sentences that Send on the map can wake this session once they "
-         "allow the watcher with the permission rule Bash(project-map-watch:*) - via "
-         "/permissions or permissions.allow in settings.json. When the watcher ends with "
+         "load the project-map skill and follow its section \"Watcher permission\". When the "
+         "watcher ends with "
          "SIGNAL, load the project-map skill (section \"How Send wakes the session\").")
 
 
