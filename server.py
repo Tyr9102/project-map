@@ -363,6 +363,10 @@ def main():
         print(error or f"map server: http://{HOST}:{PORT}, maps in {MAPS_DIR}", file=sys.stderr if error else sys.stdout)
         sys.exit(1 if error else 0)
     MAPS_DIR.mkdir(parents=True, exist_ok=True)
+    # Other accounts on a shared computer must not read the maps or drop a signal that
+    # wakes Claude with their text. Windows keeps its own access rules; this only
+    # leaves the directory writable there.
+    MAPS_DIR.chmod(0o700)
     if not (MAPS_DIR / ".gitignore").exists():
         (MAPS_DIR / ".gitignore").write_text(MAPS_GITIGNORE, encoding="utf-8")
     server = Server((HOST, PORT), Handler)

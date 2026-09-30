@@ -73,6 +73,12 @@ Optional, in the `env` block of `~/.claude/settings.json`, so the hooks and the 
 - A hook checks on every message whether this session's watcher is alive and asks Claude to start one when it is not.
 - The server refuses changes coming from other websites open in your browser.
 
+## Security model
+
+- **Websites open in your browser cannot touch your maps.** The server answers only under a local address, accepts changes only from the map page itself, and refuses the request types a foreign page could send without asking.
+- **Other accounts on the same computer cannot read your maps:** the server makes the maps directory private to you (on Linux and macOS). They can still open the page on `127.0.0.1` and send a note - only a password in the page address would stop that, not worth it for a rare setup.
+- **Programs running under your own account are trusted**, like with any file on your disk: they could write a note straight into the maps directory without the server. A password on the page would not change that.
+
 ## Limitations - read before relying on it
 
 - **It relies on Claude Code behaviour, not a documented API:** the session wakes because a finished background task starts a new turn. A Claude Code update may change that.

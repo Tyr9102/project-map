@@ -12,6 +12,7 @@ import secrets
 import shutil
 import signal
 import socket
+import stat
 import subprocess
 import sys
 import tempfile
@@ -191,6 +192,11 @@ def test_server_guards(port):
     report(status == 403, "the server refuses a foreign host name (DNS rebinding)", f"status {status}")
 
 
+def test_maps_private(maps):
+    mode = stat.S_IMODE(maps.stat().st_mode)
+    report(mode == 0o700, "the server makes the maps directory private to its owner", oct(mode))
+
+
 def test_send_wakes_watcher(port, maps):
     name = "a note + Send on the page wakes the watcher with the note text"
     proc, _sessions, started = start_watcher(maps)
@@ -281,6 +287,9 @@ def main():
         if os.name != "nt":
             test_watcher_killed(tmp)
         test_server_guards(port)
+        # Windows has no owner-only mode bits; its access rules are left alone.
+        if os.name != "nt":
+            test_maps_private(server_maps)
         test_send_wakes_watcher(port, server_maps)
         test_delete_listened_map(port, server_maps)
         # Last: it ends the test server.
