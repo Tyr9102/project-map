@@ -84,6 +84,7 @@ Optional, in the `env` block of `~/.claude/settings.json`, so the hooks and the 
 - **It relies on Claude Code behaviour, not a documented API:** the session wakes because a finished background task starts a new turn. A Claude Code update may change that.
 - **The watcher lives at most 2 hours** (the Claude Code limit for a background task). The next message you type starts a new one.
 - **Every wake-up costs tokens** - it is a full turn with the whole session context. Send notes in batches and open the map in a fresh session.
+- **Every commit in a project with a map costs tokens too** - right after it, in the same turn, Claude reads what changed, updates the tiles that the change affects and commits the map (into the maps directory's own repository, if it has one). A change that the map does not show costs only a short check.
 - **Used day to day on Linux only.** The automated tests pass on Linux, macOS and Windows, but nobody has used it on macOS or Windows yet.
 - After a plugin update, a server that is already running keeps the old version until you stop it - tell Claude **"stop the map server"**. The next Claude Code session starts the new one.
 
