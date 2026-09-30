@@ -76,7 +76,15 @@ Optional, in the `env` block of `~/.claude/settings.json`, so the hooks and the 
 - **The watcher lives at most 2 hours** (the Claude Code limit for a background task). The next message you type starts a new one.
 - **Every wake-up costs tokens** - it is a full turn with the whole session context. Send notes in batches and open the map in a fresh session.
 - **Used day to day on Linux only.** The automated tests pass on Linux, macOS and Windows, but nobody has used it on macOS or Windows yet.
-- After a plugin update, a server that is already running keeps the old version until you restart the computer or stop it.
+- After a plugin update, a server that is already running keeps the old version until you restart the computer or stop it: `pkill -f "project-map/.*/server.py"` on Linux and macOS, or end the `python` process running `server.py` in Task Manager on Windows. The next Claude Code session starts the new one.
+
+## Uninstall
+
+```
+/plugin uninstall project-map@project-map
+```
+
+Your maps stay in `~/.project-map` (or your `PROJECT_MAP_DIR`) - delete that directory yourself if you no longer need them. Stop the server as described under Limitations, and remove the `Bash(project-map-watch:*)` permission rule if you added it.
 
 ## Development
 
