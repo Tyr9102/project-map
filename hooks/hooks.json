@@ -29,6 +29,7 @@
         "hooks": [
           {
             "type": "command",
+            "if": "Bash(git commit *)",
             "command": "P=python3; python3 -c '' 2>/dev/null || P=python; \"$P\" \"${CLAUDE_PLUGIN_ROOT}/hooks/map_context.py\"",
             "timeout": 10
           }
