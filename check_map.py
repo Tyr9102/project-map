@@ -84,8 +84,11 @@ def check_map(map_dir):
     tiles = data.get("tiles", {})
     for tid, t in tiles.items():
         check_tile(tid, t, zone_ids, errors)
-    if not MIN_TILES <= len(tiles) <= MAX_TILES:
-        warnings.append(f"{len(tiles)} tiles - outside {MIN_TILES}-{MAX_TILES}")
+    # A prompt to review, not a cap: cutting important tiles to hit a number is worse than a long map.
+    if len(tiles) > MAX_TILES:
+        warnings.append(f"{len(tiles)} tiles - check for details and repeats, keep everything important")
+    elif len(tiles) < MIN_TILES:
+        warnings.append(f"{len(tiles)} tiles - is something important missing?")
     for path in sorted((map_dir / "notes").glob("*.json")):
         note = load(path, errors)
         if note is not None:

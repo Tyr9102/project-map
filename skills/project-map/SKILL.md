@@ -18,7 +18,7 @@ Python is `python3` below; on Windows use `python`. Map content (titles, tiles, 
 
 ## What for and for whom
 
-The map is for someone who does not read code. It shows the whole project at a glance: about 20 tiles in plain language and one reading direction. A map with dozens of tiles, file paths and function names is unreadable and useless.
+The map is for someone who does not read code. It shows the whole project at a glance: what is worth knowing, in plain language and one reading direction. A map stuffed with details, file paths and function names is unreadable and useless.
 
 ## Which project?
 
@@ -28,7 +28,7 @@ The user usually just says "make a project map" / "check the map" - it means the
 
 - **No code:** no paths, file names, functions, tables, endpoints. A tile says what a thing does and what effect it has.
 - **Tile = title + 1-3 short sentences.** `**bold**` works, other formatting does not.
-- **15-30 tiles.** More does not fit - suggest a separate map of one area.
+- **Every tile is worth knowing** - the goal is the important things, not a tile count. Above ~30 tiles review the map for details and repeats and merge or drop those; never cut something important to hit a number. A project that clearly splits into areas can get a separate map of one area.
 - Sources when building: the project's `CLAUDE.md`, `README`, `docs/`, the conversation. Code only when those are silent. Say what you did not verify.
 
 ## Data model

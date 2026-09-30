@@ -2,6 +2,10 @@
 
 What changed for users in each version. The version is the one in `.claude-plugin/plugin.json`.
 
+## 0.3.5 - 2026-09-30
+
+- Maps are no longer squeezed to 30 tiles: Claude keeps everything important and above ~30 tiles only trims details and repeats.
+
 ## 0.3.4 - 2026-09-30
 
 - Notes sent at the moment a session stopped listening are no longer lost - the next listening session picks them up.
