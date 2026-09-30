@@ -14,7 +14,8 @@
   --s-idea:#6A4C9C; --s-idea-bg:#EEE8F7;
   --s-pitfall:#B0281F; --s-pitfall-bg:#FBE5E2;
   --s-question:#0D6E8A; --s-question-bg:#DFF1F6;
-  --shadow:0 8px 30px rgba(20,30,25,.14);
+  --shadow:0 8px 30px rgba(20,30,25,.14); --shadow-sm:0 1px 2px rgba(20,30,25,.06),0 2px 8px rgba(20,30,25,.05);
+  --drawer-w:460px;
   /* System fonts only: a web font would make every page load a request to a third party. */
   --f-body:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --f-sign:"Arial Narrow","Liberation Sans Narrow","DejaVu Sans Condensed",system-ui,sans-serif;
@@ -26,7 +27,7 @@
   --accent:#7EA6E6; --accent-ink:#0E1A2E;
   --s-works:#6CC18D; --s-works-bg:#1A2E22; --s-in_progress:#E0B35A; --s-in_progress-bg:#32291A;
   --s-idea:#B49BE0; --s-idea-bg:#29223A; --s-pitfall:#F08A80; --s-pitfall-bg:#3A1D1A;
-  --s-question:#62C3DE; --s-question-bg:#15303A; --shadow:0 8px 30px rgba(0,0,0,.5);
+  --s-question:#62C3DE; --s-question-bg:#15303A; --shadow:0 8px 30px rgba(0,0,0,.5); --shadow-sm:0 1px 2px rgba(0,0,0,.4);
 }}
 :root[data-theme="dark"]{
   color-scheme:dark;
@@ -34,7 +35,7 @@
   --accent:#7EA6E6; --accent-ink:#0E1A2E;
   --s-works:#6CC18D; --s-works-bg:#1A2E22; --s-in_progress:#E0B35A; --s-in_progress-bg:#32291A;
   --s-idea:#B49BE0; --s-idea-bg:#29223A; --s-pitfall:#F08A80; --s-pitfall-bg:#3A1D1A;
-  --s-question:#62C3DE; --s-question-bg:#15303A; --shadow:0 8px 30px rgba(0,0,0,.5);
+  --s-question:#62C3DE; --s-question-bg:#15303A; --shadow:0 8px 30px rgba(0,0,0,.5); --shadow-sm:0 1px 2px rgba(0,0,0,.4);
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -53,7 +54,7 @@ button{cursor:pointer}
 .lead{max-width:68ch;color:var(--ink);margin:0}
 .howto{max-width:68ch;color:var(--muted);margin:0}
 .bar{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
-.legend,.filters{display:flex;flex-wrap:wrap;gap:6px}
+.filters{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:3px 10px;font:600 12px/1.4 var(--f-body);letter-spacing:.02em;white-space:nowrap}
 .chip::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
 .st-works{color:var(--s-works);background:var(--s-works-bg)}
@@ -61,8 +62,13 @@ button{cursor:pointer}
 .st-idea{color:var(--s-idea);background:var(--s-idea-bg)}
 .st-pitfall{color:var(--s-pitfall);background:var(--s-pitfall-bg)}
 .st-question{color:var(--s-question);background:var(--s-question-bg)}
-.filters button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 12px;font-size:13px}
-.filters button[aria-pressed="true"]{background:var(--ink);color:var(--ground);border-color:var(--ink)}
+.fchip{border:1px solid transparent;padding:4px 11px;font-size:13px}
+.fchip .c{font:600 11px/1 var(--f-mono);opacity:.75}
+.fchip.plain{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.fchip.plain::before{display:none}
+.fchip[aria-pressed="true"]{border-color:currentColor;box-shadow:0 0 0 1px currentColor}
+.fchip.plain[aria-pressed="true"]{background:var(--ink);color:var(--ground);border-color:var(--ink);box-shadow:none}
+.fsep{width:1px;height:18px;background:var(--line);margin-inline:4px}
 .updated{font:12px var(--f-mono);color:var(--muted);margin-left:auto}
 .back{font:500 12px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-decoration:none}
 .back:hover{color:var(--ink)}
@@ -82,7 +88,8 @@ button{cursor:pointer}
 .mapcard .updated{margin-top:auto}
 
 /* zones */
-.zone{display:grid;grid-template-columns:150px 1fr;gap:20px;border-top:2px solid var(--ink);padding-top:14px}
+.zone{position:relative;display:grid;grid-template-columns:150px 1fr;gap:20px;border-top:2px solid var(--ink);padding-top:14px}
+.zcount{position:absolute;right:0;top:-24px;font:500 12px var(--f-mono);color:var(--muted)}
 .zlabel{display:grid;gap:4px;align-content:start}
 .zcode{font:700 40px/1 var(--f-sign);color:var(--ink)}
 .zname{font:700 18px/1.1 var(--f-sign);text-transform:uppercase;letter-spacing:.06em}
@@ -92,9 +99,13 @@ button{cursor:pointer}
 .frow{display:flex;align-items:stretch;gap:0;overflow-x:auto;padding-bottom:2px}
 .frow .tile{flex:1 1 0;min-width:180px}
 .arrow{flex:0 0 34px;display:grid;place-items:center;color:var(--muted);font:600 20px var(--f-sign)}
-.tile{position:relative;text-align:left;border:1px solid var(--line);background:var(--raised);border-radius:6px;padding:12px 14px 14px;display:grid;gap:8px;align-content:start;transition:border-color .15s,transform .15s}
+.tile{position:relative;text-align:left;border:1px solid var(--line);background:var(--raised);border-radius:10px;padding:12px 14px 10px;display:grid;grid-template-rows:auto auto 1fr auto;gap:8px;box-shadow:var(--shadow-sm);transition:border-color .15s,transform .15s}
 .tile:hover{border-color:var(--ink)}
 .tile.dim{opacity:.28}
+.tile.sel{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent)}
+.tfoot{display:flex;align-items:center;gap:6px;border-top:1px solid var(--line);padding-top:7px;font:500 12px var(--f-mono);color:var(--muted)}
+.tfoot svg{width:13px;height:13px;flex:none}
+.tfoot.has{color:var(--ink)}
 .tile h3{font:600 17px/1.25 var(--f-body)}
 .tile p{margin:0;font-size:14.5px;color:var(--muted)}
 .tile p b{color:var(--ink);font-weight:600}
@@ -109,7 +120,7 @@ button{cursor:pointer}
 
 /* drawer */
 .scrim{position:fixed;inset:0;background:rgba(10,15,12,.35);z-index:20}
-.drawer{position:fixed;z-index:21;top:0;right:0;bottom:0;width:min(460px,100%);background:var(--surface);box-shadow:var(--shadow);display:grid;grid-template-rows:auto 1fr auto;padding-top:env(safe-area-inset-top,0px)}
+.drawer{position:fixed;z-index:21;top:0;right:0;bottom:0;width:min(var(--drawer-w),100%);background:var(--surface);box-shadow:var(--shadow);display:grid;grid-template-rows:auto 1fr auto;padding-top:env(safe-area-inset-top,0px)}
 .dhead{padding:18px 20px 14px;border-bottom:1px solid var(--line);display:grid;gap:8px}
 .dhead .ttop h2{font:700 24px/1.1 var(--f-sign)}
 .close{border:1px solid var(--line);background:var(--raised);border-radius:4px;width:34px;height:34px;flex:none}
@@ -141,6 +152,15 @@ textarea{width:100%;min-height:84px;resize:vertical;border:1px solid var(--line)
 .send .ghost{border:1px solid currentColor;background:none;color:inherit;border-radius:4px;padding:8px 12px}
 .send .pick{display:flex;flex-wrap:wrap;gap:8px}
 
+@media (min-width:1100px){
+  body.panel-open{padding-right:calc(var(--drawer-w) + 16px)}
+  body.panel-open .scrim{display:none}
+  body.panel-open .drawer{box-shadow:none;border-left:1px solid var(--line)}
+  body.panel-open .send{right:var(--drawer-w)}
+  /* The map loses the drawer's width; narrower flow tiles keep a 5-step row on one line. */
+  body.panel-open .frow .tile{min-width:140px}
+  body.panel-open .arrow{flex-basis:24px}
+}
 @media (max-width:720px){
   .zone{grid-template-columns:1fr;gap:12px}
   .zlabel{grid-template-columns:auto 1fr;column-gap:12px;align-items:end}
@@ -167,7 +187,6 @@ textarea{width:100%;min-height:84px;resize:vertical;border:1px solid var(--line)
     <p class="howto" id="howto"></p>
     <div class="bar">
       <span class="chip listen" id="listen" data-t="checkingClaude"></span>
-      <div class="legend" id="legend" data-t-aria="legendAria"></div>
       <div class="filters" id="filters" data-t-aria="filtersAria"></div>
       <span class="updated" id="updated"></span>
     </div>
@@ -221,7 +240,7 @@ const TEXT = {
     state: { draft: "szkic", sent: "wysłane", done: "załatwione" },
     comment: "Komentarz", question: "Pytanie", suggestion: "Sugestia",
     allMaps: "← Wszystkie mapy", deleteMap: "Usuń mapę", loading: "Wczytywanie…", checkingClaude: "sprawdzam Claude…",
-    legendAria: "Legenda statusów", filtersAria: "Filtry", connecting: "Łączę się z serwerem mapy…", close: "Zamknij",
+    filtersAria: "Filtry", connecting: "Łączę się z serwerem mapy…", close: "Zamknij",
     tileNotes: "Uwagi do tego kafelka", noteTypeAria: "Typ uwagi", noteTextAria: "Treść uwagi",
     notePlaceholder: "Co chcesz powiedzieć o tym kafelku?", addDraft: "Dodaj do szkiców", copy: "Kopiuj", send: "Wyślij",
     projectMaps: "Mapy projektów", projectMap: "Mapa projektu", mapTitle: (t) => `Mapa ${t}`,
@@ -233,7 +252,9 @@ const TEXT = {
     notListening: "Claude nie słucha", listeningTitle: "Wyślij obudzi otwartą sesję Claude w kilka sekund",
     notListeningTitle: "Uwagi zapiszą się, ale Claude zobaczy je dopiero po „sprawdź mapę” w terminalu",
     updated: (d) => `aktualizacja ${d}`,
-    filters: { all: "Wszystko", notes: "Z uwagami", questions: "Pytania", risks: "Pułapki" }, changes: (n) => `Zmiany (${n})`,
+    all: "Wszystko", withNotes: "Z uwagami", changes: "Zmiany",
+    tileCount: (n) => `${n} ${n === 1 ? "kafelek" : isFew(n) ? "kafelki" : "kafelków"}`,
+    noteCount: (n) => n ? `${n} ${n === 1 ? "uwaga" : isFew(n) ? "uwagi" : "uwag"}` : "brak uwag",
     choose: "Słucha kilka sesji - którą obudzić?", since: "od", cancel: "Anuluj",
     draftsWaiting: (n) => `Szkice: <b>${n}</b> ${n === 1 ? "uwaga czeka" : "uwag czeka"} na wysłanie.`,
     notListeningNow: " Claude teraz nie słucha - uwagi się zapiszą i poczekają.",
@@ -253,7 +274,7 @@ const TEXT = {
     state: { draft: "draft", sent: "sent", done: "done" },
     comment: "Comment", question: "Question", suggestion: "Suggestion",
     allMaps: "← All maps", deleteMap: "Delete map", loading: "Loading…", checkingClaude: "checking Claude…",
-    legendAria: "Status legend", filtersAria: "Filters", connecting: "Connecting to the map server…", close: "Close",
+    filtersAria: "Filters", connecting: "Connecting to the map server…", close: "Close",
     tileNotes: "Notes on this tile", noteTypeAria: "Note type", noteTextAria: "Note text",
     notePlaceholder: "What do you want to say about this tile?", addDraft: "Add to drafts", copy: "Copy", send: "Send",
     projectMaps: "Project maps", projectMap: "Project map", mapTitle: (t) => `Map ${t}`,
@@ -265,7 +286,9 @@ const TEXT = {
     notListening: "Claude is not listening", listeningTitle: "Send wakes the open Claude session within seconds",
     notListeningTitle: "Notes are saved, but Claude sees them only after “check the map” in the terminal",
     updated: (d) => `updated ${d}`,
-    filters: { all: "All", notes: "With notes", questions: "Questions", risks: "Pitfalls" }, changes: (n) => `Changes (${n})`,
+    all: "All", withNotes: "With notes", changes: "Changes",
+    tileCount: (n) => `${n} ${n === 1 ? "tile" : "tiles"}`,
+    noteCount: (n) => n ? `${n} ${n === 1 ? "note" : "notes"}` : "no notes",
     choose: "Several sessions listen - which one to wake?", since: "since", cancel: "Cancel",
     draftsWaiting: (n) => `Drafts: <b>${n}</b> ${n === 1 ? "note waits" : "notes wait"} to be sent.`,
     notListeningNow: " Claude is not listening now - notes are saved and will wait.",
@@ -284,6 +307,7 @@ const STATUS = TEXT.status;
 const NOTE_TYPES = TEXT.noteType;
 const STATE_LABEL = TEXT.state;
 const ZONE_CODES = "ABCDEFGHIJ";
+const NOTE_ICON = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2.5 3.5h11v7h-6l-3 2.5v-2.5h-2z"/></svg>';
 const POLL_MS = 2000;
 const VISIT_KEY_PREFIX = "project-map-lastVisit-";
 
@@ -348,9 +372,8 @@ function checkCommand() { return TEXT.checkCommand(state.meta?.title || "").trim
 function tileMatches(t) {
   const ns = notesFor(t.id).filter((n) => n.state !== "done");
   if (state.filter === "notes") return ns.length > 0;
-  if (state.filter === "questions") return t.status === "question" || ns.some((n) => n.type === "question");
-  if (state.filter === "risks") return t.status === "pitfall";
   if (state.filter === "changes") return !!freshness(t);
+  if (state.filter in STATUS) return t.status === state.filter;
   return true;
 }
 
@@ -362,9 +385,11 @@ function tileHtml(t) {
     : draft ? `<span class="count draft" title="${TEXT.draftTitle}">${TEXT.draftBadge(draft)}</span>` : "";
   const fresh = freshness(t);
   const freshChip = fresh ? `<span class="chip fresh">${fresh}</span>` : "";
-  return `<button class="tile${fresh ? " fresh" : ""}${tileMatches(t) ? "" : " dim"}" data-tile="${esc(t.id)}">
+  const sel = state.openTile === t.id ? " sel" : "";
+  return `<button class="tile${fresh ? " fresh" : ""}${sel}${tileMatches(t) ? "" : " dim"}" data-tile="${esc(t.id)}">
     <div class="ttop"><span class="chip st-${esc(t.status)}">${esc(STATUS[t.status] || t.status)}</span><span class="tbadges">${freshChip}${badge}</span></div>
-    <h3>${esc(t.title)}</h3><p>${rich(t.body)}</p></button>`;
+    <h3>${esc(t.title)}</h3><p>${rich(t.body)}</p>
+    <span class="tfoot${ns.length ? " has" : ""}">${NOTE_ICON}${TEXT.noteCount(ns.length)}</span></button>`;
 }
 
 const listeningLabel = TEXT.listening;
@@ -385,13 +410,20 @@ function renderHeader() {
   $("subtitle").textContent = m.subtitle || "";
   $("howto").textContent = m.howToRead || "";
   $("updated").textContent = m.updatedAt ? TEXT.updated(m.updatedAt) : "";
-  $("legend").innerHTML = Object.entries(STATUS).map(([k, v]) => `<span class="chip st-${k}">${v}</span>`).join("");
+  const counts = {};
+  for (const t of state.tiles) counts[t.status] = (counts[t.status] || 0) + 1;
+  // A chip for a status no tile has would filter to an empty map.
+  if (state.filter in STATUS && !counts[state.filter]) state.filter = "all";
   const changed = state.tiles.filter((t) => freshness(t)).length;
   if (!changed && state.filter === "changes") state.filter = "all";
-  const filters = { ...TEXT.filters };
-  if (changed) filters.changes = TEXT.changes(changed);
-  $("filters").innerHTML = Object.entries(filters)
-    .map(([k, v]) => `<button type="button" data-filter="${k}" aria-pressed="${state.filter === k}">${v}</button>`).join("");
+  const withNotes = state.tiles.filter((t) => notesFor(t.id).length).length;
+  const chip = (key, cls, label, n) => `<button type="button" class="chip fchip ${cls}" data-filter="${key}" aria-pressed="${state.filter === key}">`
+    + `${esc(label)} <span class="c">${n}</span></button>`;
+  $("filters").innerHTML = chip("all", "plain", TEXT.all, state.tiles.length)
+    + Object.keys(STATUS).filter((k) => counts[k]).map((k) => chip(k, `st-${k}`, STATUS[k], counts[k])).join("")
+    + '<span class="fsep" aria-hidden="true"></span>'
+    + chip("notes", "plain", TEXT.withNotes, withNotes)
+    + (changed ? chip("changes", "plain", TEXT.changes, changed) : "");
   renderListening();
 }
 
@@ -409,7 +441,7 @@ function renderZones() {
     } else {
       body = `<div class="grid">${tiles.map(tileHtml).join("")}</div>`;
     }
-    return `<section class="zone"><div class="zlabel"><span class="zcode">${ZONE_CODES[i]}</span>
+    return `<section class="zone"><span class="zcount">${TEXT.tileCount(tiles.length)}</span><div class="zlabel"><span class="zcode">${ZONE_CODES[i]}</span>
       <h2 class="zname">${esc(z.label)}</h2><span class="zhint">${esc(z.hint || "")}</span></div>${body}</section>`;
   }).join("");
 }
@@ -438,6 +470,7 @@ function renderSendBar() {
 
 function renderDrawer() {
   const t = state.tiles.find((x) => x.id === state.openTile);
+  document.body.classList.toggle("panel-open", !!t);
   if (!t) { $("drawer").hidden = true; $("scrim").hidden = true; return; }
   $("drawer").hidden = false; $("scrim").hidden = false;
   $("dStatus").innerHTML = `<span class="chip st-${esc(t.status)}">${esc(STATUS[t.status] || t.status)}</span>`;
@@ -496,7 +529,7 @@ function openView() {
   $("listen").hidden = !isMap;
   $("maps").hidden = isMap;
   $("zones").innerHTML = "";
-  for (const id of ["legend", "filters", "updated", "howto"]) $(id).textContent = "";
+  for (const id of ["filters", "updated", "howto"]) $(id).textContent = "";
   $("eyebrow").textContent = isMap ? TEXT.projectMap : TEXT.projectMaps;
   $("sendBar").hidden = true;
   renderDrawer();
@@ -565,13 +598,13 @@ function wireUi() {
   window.addEventListener("hashchange", openView);
   $("zones").addEventListener("click", (e) => {
     const b = e.target.closest("[data-tile]");
-    if (b) { state.openTile = b.dataset.tile; renderDrawer(); $("noteText").focus(); }
+    if (b) { state.openTile = b.dataset.tile; renderZones(); renderDrawer(); $("noteText").focus(); }
   });
   $("filters").addEventListener("click", (e) => {
     const b = e.target.closest("[data-filter]");
     if (b) { state.filter = b.dataset.filter; renderMap(); }
   });
-  const close = () => { state.openTile = null; renderDrawer(); };
+  const close = () => { state.openTile = null; renderZones(); renderDrawer(); };
   $("dClose").addEventListener("click", close);
   $("scrim").addEventListener("click", close);
   document.addEventListener("keydown", (e) => { if (e.key === "Escape" && state.openTile) close(); });
