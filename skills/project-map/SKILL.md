@@ -55,9 +55,9 @@ On "stop the map server" (e.g. after a plugin update the old version keeps runni
 ## Watcher permission
 
 Send wakes the session only when the user's permission rule `Bash(project-map-watch:*)` lets the watcher run. The plugin never grants it itself - the user decides, you only offer to write it.
-1. Check: `grep -F 'Bash(project-map-watch:*)'` in the user settings (`$CLAUDE_CONFIG_DIR/settings.json`, by default `~/.claude/settings.json`) and in the project's `.claude/settings.json` and `.claude/settings.local.json`. Found - nothing to do.
+1. Check: `grep -sF 'Bash(project-map-watch:*)'` (files named one by one, no glob - zsh fails on a glob that matches nothing) in the user settings (`$CLAUDE_CONFIG_DIR/settings.json`, by default `~/.claude/settings.json`) and in the project's `.claude/settings.json` and `.claude/settings.local.json`. Found - nothing to do.
 2. Missing: ask once, with the reason in the same sentence, e.g. "Send on the map wakes this session only when the watcher may run - add the rule `Bash(project-map-watch:*)` to your Claude Code settings for you?"
-3. Yes: add that string to `permissions.allow` in the user settings file (create `permissions` or `allow` when missing), change nothing else, keep it valid JSON. Then start the watcher with the command the hook gave; without that command in your context, the hook gives it on the user's next message.
+3. Yes: open the user settings file with Read first (Write and Edit refuse a file not read that way), add that string to `permissions.allow` (create `permissions` or `allow` when missing), change nothing else, keep it valid JSON. Then start the watcher with the command the hook gave; without that command in your context, the hook gives it on the user's next message.
 4. No, or the edit is refused (a declined prompt, auto mode blocking it): do not retry and do not ask again in this session. Tell the user in one sentence they can add the rule later with `/permissions`; until then the map works without waking - they say "check the map".
 
 ## How Send wakes the session
