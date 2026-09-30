@@ -208,8 +208,24 @@ def send_drafts(slug, body):
             # so they must reach Claude even if a later note failed to save.
             if sent:
                 signal = {"map": slug, "sentAt": sent_at, "notes": sent}
-                write_json_atomic(target / f"{secrets.token_hex(8)}.json", signal)
+                target = deliver_signal(d, target, signal)
     return {"sent": len(sent), "listening": target != d / "signals"}
+
+
+def deliver_signal(d, target, signal):
+    """Writes the signal to the chosen session, or to the shared box if it just stopped listening."""
+    name = f"{secrets.token_hex(8)}.json"
+    tmp = target / (name + ".tmp")
+    # No mkdir here: recreating the directory of a watcher that just exited would
+    # leave the signal where nobody reads it.
+    try:
+        tmp.write_text(json.dumps(signal, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+        os.replace(tmp, target / name)
+        return target
+    except FileNotFoundError:
+        shared = d / "signals"
+        write_json_atomic(shared / name, signal)
+        return shared
 
 
 class Server(ThreadingHTTPServer):

@@ -17,6 +17,8 @@ from datetime import datetime, timezone
 from settings import MAPS_DIR
 
 POLL_SECONDS = 1
+CLOSE_RETRIES = 20
+CLOSE_RETRY_SECONDS = 0.05
 
 
 def now_iso():
@@ -89,7 +91,29 @@ def main():
                 return
             time.sleep(POLL_SECONDS)
     finally:
-        shutil.rmtree(session_dir, ignore_errors=True)
+        close_session(session_dir, signals_dir)
+
+
+def close_session(session_dir, signals_dir):
+    # A signal the server wrote after our last check would be deleted with the directory.
+    # Moving the directory out of sessions/ first makes later writes fall back to the
+    # shared box; what already arrived goes there too, for the next session to claim.
+    closing = signals_dir / f".closing-{session_dir.name}"
+    for attempt in range(CLOSE_RETRIES):
+        try:
+            session_dir.rename(closing)
+            break
+        except FileNotFoundError:
+            return
+        except PermissionError:
+            # Windows refuses the rename while the server has a file open inside.
+            time.sleep(CLOSE_RETRY_SECONDS)
+    else:
+        print(f"watcher: could not close {session_dir}; signals in it may wait there", file=sys.stderr, flush=True)
+        closing = session_dir
+    for f in closing.glob("*.json"):
+        f.replace(signals_dir / f.name)
+    shutil.rmtree(closing, ignore_errors=True)
 
 
 if __name__ == "__main__":

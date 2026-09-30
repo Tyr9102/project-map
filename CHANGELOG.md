@@ -2,6 +2,11 @@
 
 What changed for users in each version. The version is the one in `.claude-plugin/plugin.json`.
 
+## 0.3.4 - 2026-09-30
+
+- Notes sent at the moment a session stopped listening are no longer lost - the next listening session picks them up.
+- Two projects with the same folder name get separate maps instead of sharing one.
+
 ## 0.3.3 - 2026-09-30
 
 - Claude offers to add the watcher permission rule for you - at your first map or when the watcher is blocked - and writes it only after a yes. No more editing settings by hand.

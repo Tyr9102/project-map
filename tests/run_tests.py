@@ -169,6 +169,32 @@ def test_watcher_killed(tmp):
     report(wait_for(lambda: not any(sessions.iterdir())), name, "the session directory remained")
 
 
+def test_watcher_killed_keeps_signal(tmp):
+    name = "a signal that reaches a watcher as it is killed is printed or goes back to the shared box"
+    maps = make_maps(tmp)
+    proc, sessions, started = start_watcher(maps)
+    if not started:
+        proc.kill()
+        return report(False, name, "the watcher did not start listening")
+    session_dir = next(sessions.iterdir())
+    (session_dir / "late.json").write_text('{"notes":2}', encoding="utf-8")
+    proc.send_signal(signal.SIGTERM)
+    out, err = proc.communicate(timeout=WAIT_SECONDS)
+    kept = (maps / "sample" / "signals" / "late.json").is_file() or '{"notes":2}' in out.decode("utf-8")
+    report(kept and not any(sessions.iterdir()), name, f"signal lost, output: {out.decode()} {err.decode()}")
+
+
+def test_signal_to_gone_session(tmp):
+    name = "a signal for a session that just exited goes to the shared box, no dead directory"
+    sys.path.insert(0, str(ROOT))
+    from server import deliver_signal
+    d = make_maps(tmp) / "sample"
+    gone = d / "signals" / "sessions" / "0123456789abcdef"
+    landed = deliver_signal(d, gone, {"notes": 3})
+    report(landed == d / "signals" and any((d / "signals").glob("*.json")) and not gone.exists(),
+           name, f"landed in {landed}")
+
+
 def request(port, method, path, body=None, headers=None):
     """(status, parsed JSON) of a request to the test server."""
     req = urllib.request.Request(f"http://127.0.0.1:{port}{path}", method=method,
@@ -286,6 +312,8 @@ def main():
         # the page drops the session after LISTEN_TIMEOUT_S instead.
         if os.name != "nt":
             test_watcher_killed(tmp)
+            test_watcher_killed_keeps_signal(tmp)
+        test_signal_to_gone_session(tmp)
         test_server_guards(port)
         # Windows has no owner-only mode bits; its access rules are left alone.
         if os.name != "nt":

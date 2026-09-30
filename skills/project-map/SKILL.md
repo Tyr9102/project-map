@@ -22,7 +22,7 @@ The map is for someone who does not read code. It shows the whole project at a g
 
 ## Which project?
 
-The user usually just says "make a project map" / "check the map" - it means the project in the session's working directory. Find the map whose `meta.projectDir` is that directory or its parent: `grep -r --include=map.json '"projectDir"' <maps> || true` and compare (no `*/map.json` glob - zsh fails on it when there is no map yet; `|| true` because no match is an answer, not an error). Found - work on it (refresh, not a new one). None - a new map, slug and title from the directory name. When the working directory is the home directory or a general folder like Desktop, ask in one sentence which project. A name given by the user wins.
+The user usually just says "make a project map" / "check the map" - it means the project in the session's working directory. Find the map whose `meta.projectDir` is that directory or its parent: `grep -r --include=map.json '"projectDir"' <maps> || true` and compare (no `*/map.json` glob - zsh fails on it when there is no map yet; `|| true` because no match is an answer, not an error). Found - work on it (refresh, not a new one). None - a new map, slug and title from the directory name; if `<maps>/<slug>` already exists, it belongs to another project with the same folder name - add `-2`, `-3`... to the slug. When the working directory is the home directory or a general folder like Desktop, ask in one sentence which project. A name given by the user wins.
 
 ## Content rules
 
@@ -71,7 +71,7 @@ Several sessions may listen to one map - on Send the page asks the user which on
 ## Mode 1: new map
 
 0. The project already has a map - do NOT create a second one ("make a map of X" = refresh the existing one). From scratch only on an explicit "start over"; with git the old version stays in history.
-1. Create `<maps>/<slug>/map.json` (with `projectDir` as an absolute path) and an empty `<maps>/<slug>/notes/` directory.
+1. Create `<maps>/<slug>/map.json` (with `projectDir` as an absolute path; never into an existing `<maps>/<slug>` - see "Which project?") and an empty `<maps>/<slug>/notes/` directory.
 1a. **Confirm in the code** every tile of the `how_it_works` and `features` zones - documentation describes pitfalls and decisions rather than every feature, and gets stale. A quick search is enough (`grep` with `--exclude='.env*'`, without `node_modules`/`.venv`) for the name of a screen, job or integration. No confirmation found - the tile gets status `question` and ends with a sentence saying it is not verified in the code, so the user sees where the map guesses. Same when adding tiles of these zones in mode 3.
 2. `check_map.py` OK.
 3. With git: commit "Map <Project>: new" (files by name).
