@@ -53,9 +53,24 @@ Or skip this step: when you make your first map, Claude asks whether to add the 
 
 Without it, auto mode may block the watcher (it runs code from the plugin, not from your project) and the map works without waking Claude - you type "check the map" instead.
 
-Then, in a project directory, tell Claude: **"make a project map"**. It gives you the address, by default `http://127.0.0.1:8765`.
+Then, in a project directory, tell Claude: **"make a project map"**. It gives you the address, by default `http://127.0.0.1:8765`. Other things to say: [What to tell Claude](#what-to-tell-claude).
 
 What changed in each version: [CHANGELOG.md](CHANGELOG.md).
+
+## What to tell Claude
+
+Plain sentences, in any language - no special syntax.
+
+| Say | What happens |
+|---|---|
+| "make a project map" | builds the map of the project in the current directory (or refreshes it if it exists) and gives you the address |
+| "make a project map of X" | the same for the project you name |
+| "check the map" | reads and answers the notes you sent, when the watcher is not running |
+| "put this on the map" | adds what you just settled in the conversation |
+| "update the map" | brings the tiles in line with changes in the code |
+| "stop the map server" | after a plugin update or before uninstalling |
+
+If you prefer a command to a sentence: `/project-map:project-map`.
 
 ## Settings
 

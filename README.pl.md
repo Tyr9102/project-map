@@ -53,9 +53,24 @@ Możesz też pominąć ten krok: przy pierwszej mapie Claude zapyta, czy dodać 
 
 Bez niej tryb auto może zablokować nasłuch (uruchamia kod z wtyczki, nie z Twojego projektu). Mapa działa wtedy bez budzenia Claude'a - zamiast tego piszesz „sprawdź mapę”.
 
-Potem w katalogu projektu powiedz Claude'owi: **„zrób mapę projektu”**. Poda Ci adres, domyślnie `http://127.0.0.1:8765`.
+Potem w katalogu projektu powiedz Claude'owi: **„zrób mapę projektu”**. Poda Ci adres, domyślnie `http://127.0.0.1:8765`. Co jeszcze możesz powiedzieć: [Co mówić Claude'owi](#co-mówić-claudeowi).
 
 Co się zmieniło w każdej wersji: [CHANGELOG.md](CHANGELOG.md) (po angielsku).
+
+## Co mówić Claude'owi
+
+Zwykłe zdania, w dowolnym języku - bez specjalnej składni.
+
+| Powiedz | Co się dzieje |
+|---|---|
+| „zrób mapę projektu” | buduje mapę projektu z bieżącego katalogu (albo ją odświeża, jeśli już jest) i podaje adres |
+| „zrób mapę projektu X” | to samo dla projektu o podanej nazwie |
+| „sprawdź mapę” | czyta i odpowiada na wysłane uwagi, gdy nasłuch nie działa |
+| „dopisz to do mapy” | wrzuca na mapę to, co ustaliliście w rozmowie |
+| „zaktualizuj mapę” | poprawia kafelki po zmianach w kodzie |
+| „zatrzymaj serwer mapy” | po aktualizacji wtyczki albo przed odinstalowaniem |
+
+Jeśli wolisz komendę niż zdanie: `/project-map:project-map`.
 
 ## Ustawienia
 
