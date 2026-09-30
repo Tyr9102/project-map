@@ -83,8 +83,8 @@ Opcjonalne, w bloku `env` pliku `~/.claude/settings.json`, żeby hooki i polecen
 
 ## Bezpieczeństwo
 
-- **Strony otwarte w przeglądarce nie mają dostępu do Twoich map.** Serwer odpowiada tylko pod lokalnym adresem, przyjmuje zmiany wyłącznie od samej strony z mapą i odrzuca rodzaje zapytań, które obca strona mogłaby wysłać bez pytania.
-- **Inne konta na tym samym komputerze nie czytają Twoich map:** serwer zamyka katalog map tylko dla Ciebie (na Linuksie i macOS). Mogą za to otworzyć stronę na `127.0.0.1` i wysłać uwagę - zatrzymałoby to dopiero hasło w adresie strony, co przy tak rzadkim układzie się nie opłaca.
+- **Strony otwarte w przeglądarce nie mają dostępu do Twoich map.** Serwer odpowiada tylko pod lokalnym adresem, przyjmuje zmiany wyłącznie od samej strony z mapą odrzuca rodzaje zapytań, które obca strona mogłaby wysłać bez pytania, i nie pozwala innej stronie osadzić mapy w ramce.
+- **Inne konta na tym samym komputerze nie otworzą plików Twoich map** - serwer zamyka katalog map tylko dla Ciebie (na Linuksie i macOS). **Mogą za to korzystać z serwera:** działa na Twoim koncie i odpowiada każdemu programowi na tym komputerze, więc inne konto przeczyta przez `127.0.0.1` Twoje mapy i uwagi, wyśle uwagę, usunie mapę i zatrzyma serwer. Zatrzymałoby to dopiero hasło w adresie strony, co przy tak rzadkim układzie się nie opłaca - na komputerze dzielonym z osobami, którym nie ufasz, nie trzymaj na mapie niczego poufnego.
 - **Programy działające na Twoim koncie są zaufane**, jak przy każdym pliku na dysku: mogłyby wpisać uwagę prosto do katalogu map, z pominięciem serwera. Hasło na stronie niczego by tu nie zmieniło.
 
 ## Ograniczenia - przeczytaj, zanim zaczniesz na tym polegać

@@ -216,6 +216,10 @@ def test_server_guards(port):
     report(status == 415, "the server refuses a non-JSON write (skips the preflight)", f"status {status}")
     status, _ = request(port, "GET", "/api/maps", headers={"Host": f"evil.example:{port}"})
     report(status == 403, "the server refuses a foreign host name (DNS rebinding)", f"status {status}")
+    with urllib.request.urlopen(f"http://127.0.0.1:{port}/", timeout=WAIT_SECONDS) as res:
+        frame_policy = res.headers.get("Content-Security-Policy"), res.headers.get("X-Frame-Options")
+    report(frame_policy == ("frame-ancestors 'none'", "DENY"),
+           "the page refuses to be framed by another website", str(frame_policy))
 
 
 def test_maps_private(maps):

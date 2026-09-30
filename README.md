@@ -83,8 +83,8 @@ Optional, in the `env` block of `~/.claude/settings.json`, so the hooks and the 
 
 ## Security model
 
-- **Websites open in your browser cannot touch your maps.** The server answers only under a local address, accepts changes only from the map page itself, and refuses the request types a foreign page could send without asking.
-- **Other accounts on the same computer cannot read your maps:** the server makes the maps directory private to you (on Linux and macOS). They can still open the page on `127.0.0.1` and send a note - only a password in the page address would stop that, not worth it for a rare setup.
+- **Websites open in your browser cannot touch your maps.** The server answers only under a local address, accepts changes only from the map page itself, refuses the request types a foreign page could send without asking, and does not let another site embed the map in a frame.
+- **Other accounts on the same computer cannot open your map files** - the server makes the maps directory private to you (on Linux and macOS). **But they can use the server:** it runs under your account and answers any program on this computer, so another account can read your maps and notes through `127.0.0.1`, send notes, delete a map and stop the server. Only a password in the page address would stop that, not worth it for a rare setup - on a computer shared with people you do not trust, keep nothing confidential on a map.
 - **Programs running under your own account are trusted**, like with any file on your disk: they could write a note straight into the maps directory without the server. A password on the page would not change that.
 
 ## Limitations - read before relying on it

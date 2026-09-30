@@ -2,6 +2,11 @@
 
 What changed for users in each version. The version is the one in `.claude-plugin/plugin.json`.
 
+## 0.3.6 - 2026-09-30
+
+- Another website can no longer embed the map in a hidden frame and trick you into clicking in it.
+- README: an honest security section - other accounts on the same computer cannot open your map files, but they can read and change maps through the server.
+
 ## 0.3.5 - 2026-09-30
 
 - Maps are no longer squeezed to 30 tiles: Claude keeps everything important and above ~30 tiles only trims details and repeats.
