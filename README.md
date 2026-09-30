@@ -4,13 +4,15 @@
 
 [![tests](https://github.com/Tyr9102/project-map/actions/workflows/test.yml/badge.svg)](https://github.com/Tyr9102/project-map/actions/workflows/test.yml)
 
+Keep an eye on your project at a glance. As a project grows, it gets hard to follow from a terminal conversation alone: what works, what is in progress, where the pitfalls are. Project Map shows the whole thing as a map of tiles in your browser, in plain language, without code. When you want something changed, you do not have to describe at length in the terminal which part you mean. You click the tile, write your note right on it, and Claude knows exactly what it is about.
+
 A Claude Code plugin that turns a conversation about your project into a map of tiles in the browser. You leave notes on the tiles, click **Send**, and the Claude Code session you have open wakes up by itself, replies next to the tiles and updates the map.
 
 ![A note sent from the map wakes the Claude Code session, which replies and updates the map](docs/demo.gif)
 
 *Real recording, sped up while Claude works: the note is sent on the left, the session on the right wakes within a second.*
 
-Made for people who think about a project without reading its code: about 20 tiles in plain language, in zones read top to bottom - goal, how it works, features, rules and pitfalls, questions and ideas.
+Made for people who think about a project without reading its code: the important things in plain language, in zones read top to bottom - goal, how it works, features, rules and pitfalls, questions and ideas.
 
 ## What it does
 

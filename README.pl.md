@@ -4,13 +4,15 @@
 
 [![tests](https://github.com/Tyr9102/project-map/actions/workflows/test.yml/badge.svg)](https://github.com/Tyr9102/project-map/actions/workflows/test.yml)
 
+Pilnuj swojego projektu jednym spojrzeniem. Gdy projekt rośnie, trudno go ogarnąć z samej rozmowy w terminalu: co już działa, co jest w toku, gdzie czyhają pułapki. Project Map pokazuje całość jako mapę kafelków w przeglądarce, prostym językiem, bez kodu. A gdy chcesz coś zmienić, nie musisz długo opisywać w terminalu, o który fragment chodzi. Klikasz kafelek, piszesz uwagę dokładnie przy nim, a Claude wie, czego dotyczy.
+
 Wtyczka do Claude Code, która zamienia rozmowę o projekcie w mapę kafelków w przeglądarce. Zostawiasz uwagi na kafelkach, klikasz **Wyślij**, a otwarta sesja Claude Code sama się budzi, odpowiada przy kafelkach i poprawia mapę.
 
 ![Uwaga wysłana z mapy budzi sesję Claude Code, która odpowiada i poprawia mapę](docs/demo.gif)
 
 *Prawdziwe nagranie, przyspieszone w czasie pracy Claude'a: po lewej wysłanie uwagi, po prawej sesja budzi się w ciągu sekundy.*
 
-Dla osób, które myślą o projekcie bez czytania kodu: około 20 kafelków prostym językiem, w strefach czytanych z góry na dół - cel, jak to działa, funkcje, zasady i pułapki, pytania i pomysły.
+Dla osób, które myślą o projekcie bez czytania kodu: to, co ważne, prostym językiem, w strefach czytanych z góry na dół - cel, jak to działa, funkcje, zasady i pułapki, pytania i pomysły.
 
 ## Co robi
 
