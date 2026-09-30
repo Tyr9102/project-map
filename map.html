@@ -74,11 +74,12 @@ button{cursor:pointer}
 
 /* map list */
 .maps{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
-.mapcard{display:grid;gap:6px;text-decoration:none;border:1px solid var(--line);background:var(--raised);border-radius:6px;padding:14px 16px}
+.mapcard{display:flex;flex-direction:column;gap:6px;text-decoration:none;border:1px solid var(--line);background:var(--raised);border-radius:6px;padding:14px 16px}
 .mapcard:hover{border-color:var(--ink)}
 .mapcard h2{font:700 22px/1.1 var(--f-sign)}
 .mapcard p{margin:0;font-size:14.5px;color:var(--muted)}
-.mapcard .chip{justify-self:start}
+.mapcard .chip{align-self:flex-start}
+.mapcard .updated{margin-top:auto}
 
 /* zones */
 .zone{display:grid;grid-template-columns:150px 1fr;gap:20px;border-top:2px solid var(--ink);padding-top:14px}
@@ -88,8 +89,9 @@ button{cursor:pointer}
 .zhint{font-size:13px;color:var(--muted)}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
 .flow{display:grid;gap:14px}
-.frow{display:flex;align-items:stretch;gap:0;overflow-x:auto;padding-bottom:2px}
-.frow .tile{flex:1 1 0;min-width:190px}
+.frow{display:flex;flex-wrap:wrap;align-items:stretch;row-gap:12px}
+/* Same width as a grid tile; a long stream wraps instead of squeezing or scrolling sideways. */
+.frow .tile{flex:0 1 230px}
 .arrow{flex:0 0 34px;display:grid;place-items:center;color:var(--muted);font:600 20px var(--f-sign)}
 .tile{position:relative;text-align:left;border:1px solid var(--line);background:var(--raised);border-radius:6px;padding:12px 14px 14px;display:grid;gap:8px;align-content:start;transition:border-color .15s,transform .15s}
 .tile:hover{border-color:var(--ink)}
@@ -144,8 +146,8 @@ textarea{width:100%;min-height:84px;resize:vertical;border:1px solid var(--line)
   .zone{grid-template-columns:1fr;gap:12px}
   .zlabel{grid-template-columns:auto 1fr;column-gap:12px;align-items:end}
   .zcode{font-size:30px;grid-row:span 2}
-  .frow{flex-direction:column;overflow:visible}
-  .frow .tile{min-width:0}
+  .frow{flex-direction:column;row-gap:0}
+  .frow .tile{flex:none}
   .arrow{flex-basis:24px;transform:rotate(90deg)}
   .updated{margin-left:0}
 }
