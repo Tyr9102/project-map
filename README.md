@@ -68,7 +68,7 @@ Optional, in the `env` block of `~/.claude/settings.json`, so the hooks and the 
 
 ## How it works
 
-- A small local server (Python, standard library) serves the page and stores notes as files, one file per note. The plugin starts it at session start in a project that has a map.
+- A small local server (Python, standard library) serves the page and stores notes as files, one file per note. The plugin starts it at session start in a project that has a map. It keeps running after you close Claude Code, on purpose: bookmark the page and your maps are one click away, with or without a session. It stops when you restart the computer or tell Claude **"stop the map server"**; the next session in a project with a map starts it again.
 - A watcher runs as a Claude Code background task. Send writes a signal file; the watcher sees it, prints it and exits - and the end of a background task is what wakes the session. Claude then starts a new watcher.
 - A hook checks on every message whether this session's watcher is alive and asks Claude to start one when it is not.
 - The server refuses changes coming from other websites open in your browser.
