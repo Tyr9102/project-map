@@ -4,6 +4,10 @@ on:
   push:
   pull_request:
 
+# Tests only read the code; a write token would be wasted on a malicious pull request.
+permissions:
+  contents: read
+
 jobs:
   test:
     strategy:
