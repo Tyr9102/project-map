@@ -1,6 +1,6 @@
 {
   "name": "project-map",
-  "description": "Project Map - an interactive project map that wakes your Claude Code session.",
+  "description": "See your whole project at a glance - without reading code. Leave notes on the map, click Send, and Claude Code replies. A plugin for Claude Code, runs locally.",
   "owner": {
     "name": "Patryk Tyrański",
     "url": "https://github.com/Tyr9102"

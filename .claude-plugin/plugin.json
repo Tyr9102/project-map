@@ -1,8 +1,8 @@
 {
   "name": "project-map",
   "displayName": "Project Map",
-  "version": "0.3.6",
-  "description": "An interactive map of your project in the browser: leave notes on tiles, click Send, and the open Claude Code session wakes up, replies and updates the map.",
+  "version": "0.3.7",
+  "description": "See your whole project at a glance - without reading code. Leave notes on the map, click Send, and Claude Code replies. A plugin for Claude Code, runs locally.",
   "author": {
     "name": "Patryk Tyrański",
     "url": "https://github.com/Tyr9102"

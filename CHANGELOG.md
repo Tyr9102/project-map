@@ -2,6 +2,11 @@
 
 What changed for users in each version. The version is the one in `.claude-plugin/plugin.json`.
 
+## 0.3.7 - 2026-10-01
+
+- New plugin description: what the map gives you, in plain words.
+- SECURITY.md: how to report a vulnerability privately.
+
 ## 0.3.6 - 2026-09-30
 
 - Another website can no longer embed the map in a hidden frame and trick you into clicking in it.
