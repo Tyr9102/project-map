@@ -66,6 +66,8 @@ Send marks drafts as `sent` and writes a signal. The watcher sees it within a se
 1. **FIRST start the watcher again** with the same command as before and the same session id (refresh the topic if the session now works on something else) - before handling the notes. If that command is not in your context, skip it - the hook gives it on the user's next message; otherwise a Send during your work waits and the indicator stays red.
 2. Mode 2 (below).
 
+A watcher that ends with `SUPERSEDED` was replaced by a newer one in this Claude window (after `/clear`) - do not start it again and say nothing.
+
 Several sessions may listen to one map - on Send the page asks the user which one to wake. A Send when nobody listened goes to the first session that starts listening.
 
 ## Mode 1: new map

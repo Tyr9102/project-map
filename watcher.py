@@ -7,6 +7,7 @@ Several sessions may listen to one map; the page asks which one to wake.
 
 Usage: watcher.py <map-slug> "<session topic>" [<Claude session id>]
 """
+import os
 import secrets
 import shutil
 import signal
@@ -42,6 +43,22 @@ def claim_shared_signals(signals_dir, session_dir):
             pass
 
 
+def supersede_same_window(sessions_dir, session_dir, claude_pid):
+    # /clear gives the conversation a new id while its old watcher keeps running in the
+    # same Claude window; without this the page offers two sessions that are one.
+    if not claude_pid:
+        return
+    for other in sessions_dir.iterdir():
+        if other == session_dir:
+            continue
+        try:
+            if (other / "claude_pid").read_text(encoding="utf-8") == claude_pid:
+                (other / "superseded").touch()
+        except FileNotFoundError:
+            # Closing right now, or started by an older plugin version without the file.
+            pass
+
+
 def main():
     # Windows consoles default to a legacy code page that cannot print Polish letters.
     sys.stdout.reconfigure(encoding="utf-8")
@@ -67,6 +84,10 @@ def main():
         (session_dir / "topic").write_text(topic, encoding="utf-8")
         (session_dir / "start").write_text(now_iso() + "\n", encoding="utf-8")
         (session_dir / "claude_session").write_text(claude_session, encoding="utf-8")
+        # Set by Claude Code for its child processes: the window this watcher belongs to.
+        claude_pid = os.environ.get("CLAUDE_PID", "")
+        (session_dir / "claude_pid").write_text(claude_pid, encoding="utf-8")
+        supersede_same_window(session_dir.parent, session_dir, claude_pid)
         while True:
             if not map_file.is_file():
                 # Deleted on the page. Exiting wakes the session anyway, so tell it why.
@@ -82,6 +103,10 @@ def main():
                 if map_file.is_file():
                     raise
                 continue
+            if (session_dir / "superseded").exists():
+                print("SUPERSEDED: a newer watcher of this Claude window took over. Do not start "
+                      "the watcher again and do not mention it to the user.", flush=True)
+                return
             claim_shared_signals(signals_dir, session_dir)
             received = sorted(session_dir.glob("*.json"))
             if received:

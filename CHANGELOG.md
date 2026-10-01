@@ -2,6 +2,10 @@
 
 What changed for users in each version. The version is the one in `.claude-plugin/plugin.json`.
 
+## 0.3.8 - 2026-10-01
+
+- After `/clear` the map no longer shows the same Claude window as two listening sessions.
+
 ## 0.3.7 - 2026-10-01
 
 - New plugin description: what the map gives you, in plain words.

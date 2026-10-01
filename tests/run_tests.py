@@ -129,11 +129,12 @@ def make_maps(tmp):
     return maps
 
 
-def start_watcher(maps, slug="sample"):
+def start_watcher(maps, slug="sample", claude_pid="1"):
     # Through the plugin command, as Claude runs it; sh comes with Git for Windows.
+    # CLAUDE_PID is fixed: inherited from a Claude session running the tests it would vary.
     proc = subprocess.Popen([shutil.which("sh"), str(ROOT / "bin" / "project-map-watch"), slug, "test", SESSION_ID],
                             stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                            env={**os.environ, "PROJECT_MAP_DIR": str(maps)})
+                            env={**os.environ, "PROJECT_MAP_DIR": str(maps), "CLAUDE_PID": claude_pid})
     sessions = maps / slug / "signals" / "sessions"
     started = wait_for(lambda: any(sessions.glob("*/heartbeat")))
     return proc, sessions, started
@@ -182,6 +183,40 @@ def test_watcher_killed_keeps_signal(tmp):
     out, err = proc.communicate(timeout=WAIT_SECONDS)
     kept = (maps / "sample" / "signals" / "late.json").is_file() or '{"notes":2}' in out.decode("utf-8")
     report(kept and not any(sessions.iterdir()), name, f"signal lost, output: {out.decode()} {err.decode()}")
+
+
+def test_watcher_same_window(tmp):
+    name = "a new watcher from the same Claude window ends the old one with SUPERSEDED"
+    maps = make_maps(tmp)
+    old, sessions, started = start_watcher(maps)
+    if not started:
+        old.kill()
+        return report(False, name, "the first watcher did not start listening")
+    new, _sessions, _started = start_watcher(maps)
+    try:
+        out, err = old.communicate(timeout=WAIT_SECONDS)
+    except subprocess.TimeoutExpired:
+        old.kill()
+        new.kill()
+        return report(False, name, "the old watcher did not exit")
+    one_left = wait_for(lambda: len(list(sessions.glob("*/heartbeat"))) == 1)
+    new.kill()
+    new.wait(timeout=WAIT_SECONDS)
+    report(one_left and "SUPERSEDED" in out.decode("utf-8"), name,
+           f"sessions left: {len(list(sessions.iterdir()))}, output: {out.decode()} {err.decode()}")
+
+
+def test_watcher_other_window(tmp):
+    name = "watchers from different Claude windows both keep listening"
+    maps = make_maps(tmp)
+    first, sessions, _started = start_watcher(maps, claude_pid="1")
+    second, _sessions, _started = start_watcher(maps, claude_pid="2")
+    both = wait_for(lambda: len(list(sessions.glob("*/heartbeat"))) == 2)
+    alive = first.poll() is None and second.poll() is None
+    for proc in (first, second):
+        proc.kill()
+        proc.wait(timeout=WAIT_SECONDS)
+    report(both and alive, name, "one of the watchers stopped listening")
 
 
 def test_signal_to_gone_session(tmp):
@@ -317,6 +352,8 @@ def main():
         if os.name != "nt":
             test_watcher_killed(tmp)
             test_watcher_killed_keeps_signal(tmp)
+        test_watcher_same_window(tmp)
+        test_watcher_other_window(tmp)
         test_signal_to_gone_session(tmp)
         test_server_guards(port)
         # Windows has no owner-only mode bits; its access rules are left alone.
