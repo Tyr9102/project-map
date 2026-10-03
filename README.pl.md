@@ -23,7 +23,7 @@ Dla osób, które myślą o projekcie bez czytania kodu: to, co ważne, prostym 
 - **„Zrób mapę projektu”** - Claude czyta CLAUDE.md, README, dokumentację projektu i Waszą rozmowę, a do kodu zagląda tam, gdzie dokumentacja milczy. Funkcje sprawdza w kodzie i buduje mapę. Kafelki, których nie potwierdził, oznacza jako otwarte pytania.
 - **Uwagi na kafelkach** - komentarz, pytanie albo sugestia. Zbierasz kilka szkiców i wysyłasz je jedną paczką.
 - **Filtr jednym kliknięciem** - przyciski statusów z licznikami (działa, pułapka, otwarte pytanie...) przygaszają pozostałe kafelki. Na szerokim ekranie panel uwag stoi obok mapy, więc cały czas go widać.
-- **Wyślij budzi sesję** - w 1-2 sekundy, bez pisania w terminalu. Odpowiedzi pojawiają się przy kafelkach.
+- **Wyślij budzi sesję** - w 1-2 sekundy, bez pisania w terminalu. Odpowiedzi pojawiają się przy kafelkach. Gdy w projekcie słucha kilka sesji naraz, strona pyta, do której wysłać uwagi. Każda sesja ma krótki temat, więc łatwo wybrać właściwą.
 - **Mapa nadąża** - po commicie Claude poprawia kafelki, a na starcie sesji zgłasza commity, których mapa jeszcze nie widziała. Decyzje z rozmowy trafiają na mapę od razu, a pomysły z burzy mózgów tylko te, które wybierzesz na jej koniec - żeby mapa nie zapełniła się każdym „a gdyby tak”.
 - **Wszystko zostaje u Ciebie** - strona działa na `127.0.0.1`, mapy to zwykłe pliki JSON na dysku. Nic nie wychodzi nigdzie poza Claude'a, w ramach Twojej zwykłej sesji.
 

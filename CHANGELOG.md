@@ -2,6 +2,11 @@
 
 What changed for users in each version. The version is the one in `.claude-plugin/plugin.json`.
 
+## 0.3.9 - 2026-10-03
+
+- With several sessions listening, the page now asks which one to send the notes to, instead of which one to wake.
+- README: what the map is not, where its content comes from, a screenshot of the map list, and how sending works with several sessions.
+
 ## 0.3.8 - 2026-10-01
 
 - After `/clear` the map no longer shows the same Claude window as two listening sessions.
