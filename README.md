@@ -4,7 +4,7 @@
 
 [![tests](https://github.com/Tyr9102/project-map/actions/workflows/test.yml/badge.svg)](https://github.com/Tyr9102/project-map/actions/workflows/test.yml)
 
-Keep an eye on your project at a glance. As a project grows, it gets hard to follow from a terminal conversation alone: what works, what is in progress, where the pitfalls are. Project Map shows the whole thing as a map of tiles in your browser, in plain language, without code. When you want something changed, you do not have to describe at length in the terminal which part you mean. You click the tile, write your note right on it, and Claude knows exactly what it is about. The map does not replace your work in the terminal - that is still where you talk to Claude and build the project. It helps you keep the context in one place and, while you work, pin down a specific point quickly.
+Keep an eye on your project at a glance. As a project grows, it gets hard to follow from a terminal conversation alone: what works, what is in progress, where the pitfalls are. Project Map shows the whole thing as a map of tiles in your browser, in plain language, without code. When you want something changed, you do not have to describe at length in the terminal which part you mean. You click the tile, write your note right on it, and Claude knows exactly what it is about. The map does not replace your work in the terminal - that is still where you talk to Claude and build the project. It helps you keep the context in one place and, while you work, pin down a specific point quickly. I wrote it for myself: understanding my project when I come back to it after a week on other ones matters more to me than the token cost.
 
 A Claude Code plugin that turns a conversation about your project into a map of tiles in the browser. You leave notes on the tiles, click **Send**, and the Claude Code session you have open wakes up by itself, replies next to the tiles and updates the map.
 
@@ -16,7 +16,7 @@ Made for people who think about a project without reading its code: the importan
 
 ## What it does
 
-- **"Make a project map"** - Claude reads the project's docs and history, checks features against the code and builds the map. Tiles it could not confirm are marked as open questions.
+- **"Make a project map"** - Claude reads CLAUDE.md, the README, the project's docs and your conversation, and looks into the code where the docs are silent. It checks features against the code and builds the map. Tiles it could not confirm are marked as open questions.
 - **Notes on tiles** - comment, question or suggestion. Collect a few drafts, then Send them as one batch.
 - **Filter at a glance** - status chips with counts (works, pitfall, open question...) dim every other tile. On a wide screen the notes panel sits beside the map, so it stays in view.
 - **Send wakes the session** - within 1-2 seconds, no typing in the terminal. Replies appear next to the tiles.
@@ -24,6 +24,12 @@ Made for people who think about a project without reading its code: the importan
 - **Everything stays local** - the page runs on `127.0.0.1`, maps are plain JSON files on your disk. Nothing is sent anywhere except to Claude, as part of your normal session.
 
 The page speaks English or Polish, following your browser language.
+
+## What it is not
+
+- **Not a code map.** Repo maps, code knowledge graphs and code maps in editors show files, functions and dependencies - to a programmer or to an agent. If you read code, they will give you more. This map shows no code at all: it is for people who build projects with AI but do not read the code.
+- **Not a task board.** Kanban and GitHub Projects tell you what is left to do. The map tells you what the project is and how it works. They can live side by side.
+- **Not a docs viewer.** The map reads md files to build itself, but does not display them. A tile holds a title and 1-3 short sentences.
 
 ## Requirements
 

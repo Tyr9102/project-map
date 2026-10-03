@@ -4,7 +4,7 @@
 
 [![tests](https://github.com/Tyr9102/project-map/actions/workflows/test.yml/badge.svg)](https://github.com/Tyr9102/project-map/actions/workflows/test.yml)
 
-Pilnuj swojego projektu jednym spojrzeniem. Gdy projekt rośnie, trudno go ogarnąć z samej rozmowy w terminalu: co już działa, co jest w toku, gdzie czyhają pułapki. Project Map pokazuje całość jako mapę kafelków w przeglądarce, prostym językiem, bez kodu. A gdy chcesz coś zmienić, nie musisz długo opisywać w terminalu, o który fragment chodzi. Klikasz kafelek, piszesz uwagę dokładnie przy nim, a Claude wie, czego dotyczy. Mapa nie zastępuje pracy w terminalu - to dalej tam rozmawiasz z Claude'em i budujesz projekt. Pomaga trzymać kontekst w jednym miejscu i w trakcie pracy szybko doprecyzować konkretną kwestię.
+Pilnuj swojego projektu jednym spojrzeniem. Gdy projekt rośnie, trudno go ogarnąć z samej rozmowy w terminalu: co już działa, co jest w toku, gdzie czyhają pułapki. Project Map pokazuje całość jako mapę kafelków w przeglądarce, prostym językiem, bez kodu. A gdy chcesz coś zmienić, nie musisz długo opisywać w terminalu, o który fragment chodzi. Klikasz kafelek, piszesz uwagę dokładnie przy nim, a Claude wie, czego dotyczy. Mapa nie zastępuje pracy w terminalu - to dalej tam rozmawiasz z Claude'em i budujesz projekt. Pomaga trzymać kontekst w jednym miejscu i w trakcie pracy szybko doprecyzować konkretną kwestię. Pisałem ją pod siebie: ważniejsze jest dla mnie, żebym rozumiał swój projekt, kiedy wracam do niego po tygodniu pracy nad innymi, niż sam koszt tokenów.
 
 Wtyczka do Claude Code, która zamienia rozmowę o projekcie w mapę kafelków w przeglądarce. Zostawiasz uwagi na kafelkach, klikasz **Wyślij**, a otwarta sesja Claude Code sama się budzi, odpowiada przy kafelkach i poprawia mapę.
 
@@ -16,7 +16,7 @@ Dla osób, które myślą o projekcie bez czytania kodu: to, co ważne, prostym 
 
 ## Co robi
 
-- **„Zrób mapę projektu”** - Claude czyta dokumentację i historię projektu, sprawdza funkcje w kodzie i buduje mapę. Kafelki, których nie potwierdził, oznacza jako otwarte pytania.
+- **„Zrób mapę projektu”** - Claude czyta CLAUDE.md, README, dokumentację projektu i Waszą rozmowę, a do kodu zagląda tam, gdzie dokumentacja milczy. Funkcje sprawdza w kodzie i buduje mapę. Kafelki, których nie potwierdził, oznacza jako otwarte pytania.
 - **Uwagi na kafelkach** - komentarz, pytanie albo sugestia. Zbierasz kilka szkiców i wysyłasz je jedną paczką.
 - **Filtr jednym kliknięciem** - przyciski statusów z licznikami (działa, pułapka, otwarte pytanie...) przygaszają pozostałe kafelki. Na szerokim ekranie panel uwag stoi obok mapy, więc cały czas go widać.
 - **Wyślij budzi sesję** - w 1-2 sekundy, bez pisania w terminalu. Odpowiedzi pojawiają się przy kafelkach.
@@ -24,6 +24,12 @@ Dla osób, które myślą o projekcie bez czytania kodu: to, co ważne, prostym 
 - **Wszystko zostaje u Ciebie** - strona działa na `127.0.0.1`, mapy to zwykłe pliki JSON na dysku. Nic nie wychodzi nigdzie poza Claude'a, w ramach Twojej zwykłej sesji.
 
 Strona mówi po polsku albo po angielsku, zależnie od języka przeglądarki.
+
+## Czym to nie jest
+
+- **Nie mapa kodu.** Repo mapy, grafy wiedzy o kodzie i mapy kodu w edytorach pokazują pliki, funkcje i zależności - programiście albo agentowi. Jeśli czytasz kod, dadzą Ci więcej. Ta mapa nie pokazuje kodu w ogóle: jest dla osób, które budują projekty z AI, a kodu nie czytają.
+- **Nie tablica zadań.** Kanban i GitHub Projects mówią, co jest do zrobienia. Mapa mówi, czym jest projekt i jak działa. Mogą działać obok siebie.
+- **Nie przeglądarka dokumentacji.** Mapa czyta pliki md, żeby się zbudować, ale ich nie wyświetla. Na kafelku jest tytuł i 1-3 krótkie zdania.
 
 ## Wymagania
 
