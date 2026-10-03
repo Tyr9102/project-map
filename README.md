@@ -12,6 +12,10 @@ A Claude Code plugin that turns a conversation about your project into a map of 
 
 *Real recording, sped up while Claude works: the note is sent on the left, the session on the right wakes within a second.*
 
+![The map list: every project side by side, the green badge marks the one Claude is working on](docs/maps-list-en.png)
+
+*All your projects side by side (the ones shown are examples). The green "Claude listens" badge shows which one an open session is working on right now.*
+
 Made for people who think about a project without reading its code: the important things in plain language, in zones read top to bottom - goal, how it works, features, rules and pitfalls, questions and ideas.
 
 ## What it does

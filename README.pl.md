@@ -12,6 +12,10 @@ Wtyczka do Claude Code, która zamienia rozmowę o projekcie w mapę kafelków w
 
 *Prawdziwe nagranie, przyspieszone w czasie pracy Claude'a: po lewej wysłanie uwagi, po prawej sesja budzi się w ciągu sekundy.*
 
+![Lista map: wszystkie projekty obok siebie, zielona plakietka oznacza ten, nad którym pracuje Claude](docs/maps-list-pl.png)
+
+*Wszystkie projekty obok siebie (na zrzucie przykładowe). Zielona plakietka „Claude słucha” pokazuje, nad którym projektem pracuje teraz otwarta sesja.*
+
 Dla osób, które myślą o projekcie bez czytania kodu: to, co ważne, prostym językiem, w strefach czytanych z góry na dół - cel, jak to działa, funkcje, zasady i pułapki, pytania i pomysły.
 
 ## Co robi
